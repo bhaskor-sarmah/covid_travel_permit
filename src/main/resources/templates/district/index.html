@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+
+<head>
+    <span th:replace="fragments/district_fragments :: head('e-TravelPermit')">
+    </span>
+    <span th:replace="fragments/district_fragments :: common-css"></span>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <span th:replace="fragments/district_fragments :: side-navbar('','')"></span>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <span th:replace="fragments/district_fragments :: top-navbar"></span>
+                <div class="container-fluid">
+                    <!-- <span th:replace="fragments/district_fragments :: page-heading"></span> -->
+                    <h6 class="font-weight-bold">TO <span th:text="${#authentication.getPrincipal().getUserScopeName()}"></span> MOVEMENTS</h6>
+                    <hr>
+                    <div class="row">
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-60 py-2">
+                                <div class="card-body count-card">
+                                    <a href="#" style="text-decoration: none;">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                    Pending Requests
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    1000
+                                                </div>
+                                            </div>
+                                            <div class="col-auto font-weight-bold text-info">
+                                                500
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-60 py-2">
+                                <div class="card-body count-card">
+                                    <a href="#" style="text-decoration: none;">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                    Approved Requests
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    1000
+                                                </div>
+                                            </div>
+                                            <div class="col-auto font-weight-bold text-success">
+                                                500
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-danger shadow h-60 py-2">
+                                <div class="card-body count-card">
+                                    <a href="#" style="text-decoration: none;">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                    Rejected Requests
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    1000
+                                                </div>
+                                            </div>
+                                            <div class="col-auto font-weight-bold text-danger">
+                                                500
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   <hr>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-stripped table-bordered">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th colspan="5">SUB DISTRICT WISE MOVMENT COUNT TO <span class="text-info"
+                                                th:text="${#authentication.getPrincipal().getUserScopeName()}"></span></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Sl. No.</th>
+                                        <th>Sub district name</th>
+                                        <th>Pending</th>
+                                        <th>Approved</th>
+                                        <th>Rejected</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <span th:replace="fragments/district_fragments :: footer"></span>
+        </div>
+    </div>
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <span th:replace="fragments/district_fragments :: common-js('')"></span>
+    <script>
+        $(document).ready(function(){
+          $("#sidebarToggle").trigger('click');
+        });
+    </script>
+</body>
+
+</html>

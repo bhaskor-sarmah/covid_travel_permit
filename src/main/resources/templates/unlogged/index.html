@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <span th:replace="fragments/unlogged_fragments :: head('e-TravelPermit')">
+  </span>
+  <span th:replace="fragments/unlogged_fragments :: common-css"></span>
+</head>
+
+
+<body>
+  <nav th:replace="fragments/unlogged_fragments :: nav-top"></nav>
+
+  <!-- Masthead -->
+  <header class="masthead text-white text-center">
+    <div class="overlay"></div>
+    <div class="container" style="filter: none;-webkit-filter: none;">
+      <div class="row">
+        <div class="col-md-4 col-lg-4 col-xl-4 mx-auto">
+
+          <form th:action="@{/login}" method="post" autocomplete="off">
+            <p class="text-center">
+              <b class="text-danger" id="errorMsg"></b>
+              <!-- <b th:if="${param.error[0] == 'INVALID CAPTCHA'}" class="text-danger">Captcha does not Match. Please
+                verify.</b> -->
+            </p>
+            <div class="form-group">
+              <!-- <i class="fa fa-user"></i> -->
+              <input type="text" name="username" class="form-control" placeholder="Username" required="required" />
+            </div>
+            <div class="form-group">
+              <!-- <i class="fa fa-lock"></i> -->
+              <input type="password" name="password" class="form-control" placeholder="Password" required="required" />
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <img id="captchaImgLogin" th:src="@{/genCaptcha.png}" class="form-control p-0"
+                  style="background: none;">
+                <!-- Reload Captcha -->
+                <div class="input-group-append">
+                  <button onclick="refreshcatchaLogin();" id="captchaRefreshButLogin" type="button"
+                    class="btn btn-secondary text-center">
+                    <i class="fa fa-redo"></i>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reload&nbsp;&nbsp;&nbsp;&nbsp;
+                  </button>
+                </div>
+              </div>
+              <input type="text" class="form-control" name="captcha" id="captchaLogin" autocomplete="off" required
+                placeholder="Enter the text shown">
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <footer th:replace="fragments/unlogged_fragments :: footer"></footer>
+
+  <span th:replace="fragments/unlogged_fragments :: common-js"></span>
+
+
+  <script th:if="${msg}" th:inline="javascript">
+    /*<![CDATA[*/
+    var msg = /*[[${msg}]]*/ "";
+    /*]]>*/
+    $.alert({
+      title: 'Success!',
+      content: msg,
+      type: 'green',
+      typeAnimated: true
+    });
+  </script>
+  <script th:if="${msgErr}" th:inline="javascript">
+    /*<![CDATA[*/
+    var msg = /*[[${msgErr}]]*/ "";
+    /*]]>*/
+    $.alert({
+      title: 'Error!',
+      content: msg,
+      type: 'red',
+      typeAnimated: true
+    });
+  </script>
+  <script>
+    function refreshcatchaLogin() {
+      var id = Math.random();
+      $('#captchaImgLogin').attr("src", "/genCaptcha.png?" + id);
+      // $('#ansCaptcha').val("");
+    }
+  </script>
+  <script th:if="${param.error}" th:inline="javascript">
+    $(window).on("load", function () {
+      /*<![CDATA[*/
+      var msg = /*[[${param.error}]]*/ "";
+      /*]]>*/
+      $("#errorMsg").html(msg);
+      $("#myModal").modal("show");
+    });
+  </script>
+</body>
+
+</html>
