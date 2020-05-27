@@ -43,11 +43,14 @@ public class QrCodeMemberDetail implements Serializable {
     @Column(name = "pin")
     private String pin;
 
+    @Column(name = "assigned_screening_center")
+    private String assignedScreeningCenter;
+
     public QrCodeMemberDetail() {
     }
 
     public QrCodeMemberDetail(Long id, String name, String mobileNumber, String address, String district, String thana,
-            String pin) {
+            String pin, String assignedScreeningCenter) {
         this.id = id;
         this.name = name;
         this.mobileNumber = mobileNumber;
@@ -55,6 +58,7 @@ public class QrCodeMemberDetail implements Serializable {
         this.district = district;
         this.thana = thana;
         this.pin = pin;
+        this.assignedScreeningCenter = assignedScreeningCenter;
     }
 
     public Long getId() {
@@ -113,11 +117,19 @@ public class QrCodeMemberDetail implements Serializable {
         this.pin = pin;
     }
 
+    public String getAssignedScreeningCenter() {
+        return this.assignedScreeningCenter;
+    }
+
+    public void setAssignedScreeningCenter(String assignedScreeningCenter) {
+        this.assignedScreeningCenter = assignedScreeningCenter;
+    }
+
     @Override
     public String toString() {
         return "{" + " id='" + id + "'" + ", name='" + name + "'" + ", mobileNumber='" + mobileNumber + "'"
                 + ", address='" + address + "'" + ", district='" + district + "'" + ", thana='" + thana + "'"
-                + ", pin='" + pin + "'" + "}";
+                + ", pin='" + pin + "'" + ", assignedScreeningCenter='" + assignedScreeningCenter + "'" + "}";
     }
 
 }

@@ -69,10 +69,24 @@
     <hr class="sidebar-divider my-0" />
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item" th:classappend="${page == ''} ? active : ''">
+    <li class="nav-item" th:classappend="${page == 'home'} ? active : ''">
       <a class="nav-link" th:href="@{/district/home}">
         <i class="fas fa-fw fa-home"></i>
         <span>Dashboard</span></a>
+    </li>
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item" th:classappend="${page == 'reportingPending'} ? active : ''">
+      <a class="nav-link" th:href="@{/district/reportingPending}">
+        <i class="fas fa-fw fa-user-clock"></i>
+        <span>Screening Pending</span></a>
+    </li>
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item" th:classappend="${page == 'reportedPassengers'} ? active : ''">
+      <a class="nav-link" th:href="@{/district/reportedPassengers}">
+        <i class="fas fa-fw fa-user-check"></i>
+        <span>Screening Done</span></a>
     </li>
 
     <!-- Divider -->

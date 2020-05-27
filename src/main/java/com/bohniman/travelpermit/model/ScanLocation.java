@@ -29,10 +29,10 @@ public class ScanLocation implements Serializable {
     private String location;
 
     @Column(name = "is_enable", nullable = false, columnDefinition = "tinyint(1) default 1")
-    private Boolean enable = true;
+    private Boolean enable;
 
     @Column(name = "is_screening_center", nullable = false, columnDefinition = "tinyint(1) default 0")
-    private Boolean screeningCenter = false;
+    private Boolean screeningCenter;
 
     public ScanLocation() {
     }

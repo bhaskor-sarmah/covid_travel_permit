@@ -39,6 +39,12 @@ public class QrCodeData implements Serializable {
     @Column(name = "token_id", unique = true)
     private String tokenId;
 
+    @Column(name = "destination_district")
+    private String destinationDistrict;
+
+    @Column(name = "status", columnDefinition = "varchar(255) default 'ACTIVE'")
+    private String status;
+
     @Column(name = "reached_screening_center", nullable = false, columnDefinition = "tinyint(1) default 0")
     private Boolean reachedScreeningCenter;
 
@@ -65,10 +71,11 @@ public class QrCodeData implements Serializable {
     public QrCodeData() {
     }
 
-    public QrCodeData(Long id, String tokenId, Boolean reachedScreeningCenter, List<QrcodeScanDetail> scanDetails,
-            List<QrCodeMemberDetail> memberDetails) {
+    public QrCodeData(Long id, String tokenId, String destinationDistrict, Boolean reachedScreeningCenter,
+            List<QrcodeScanDetail> scanDetails, List<QrCodeMemberDetail> memberDetails) {
         this.id = id;
         this.tokenId = tokenId;
+        this.destinationDistrict = destinationDistrict;
         this.reachedScreeningCenter = reachedScreeningCenter;
         this.scanDetails = scanDetails;
         this.memberDetails = memberDetails;
@@ -88,6 +95,14 @@ public class QrCodeData implements Serializable {
 
     public void setTokenId(String tokenId) {
         this.tokenId = tokenId;
+    }
+
+    public String getDestinationDistrict() {
+        return this.destinationDistrict;
+    }
+
+    public void setDestinationDistrict(String destinationDistrict) {
+        this.destinationDistrict = destinationDistrict;
     }
 
     public Boolean isReachedScreeningCenter() {
@@ -118,11 +133,15 @@ public class QrCodeData implements Serializable {
         this.memberDetails = memberDetails;
     }
 
+    public void addScanDetails(QrcodeScanDetail scanDetails) {
+        this.scanDetails.add(scanDetails);
+    }
+
     @Override
     public String toString() {
-        return "{" + " id='" + id + "'" + ", tokenId='" + tokenId + "'" + ", reachedScreeningCenter='"
-                + reachedScreeningCenter + "'" + ", scanDetails='" + scanDetails + "'" + ", memberDetails='"
-                + memberDetails + "'" + "}";
+        return "{" + " id='" + id + "'" + ", tokenId='" + tokenId + "'" + ", destinationDistrict='"
+                + destinationDistrict + "'" + ", reachedScreeningCenter='" + reachedScreeningCenter + "'"
+                + ", scanDetails='" + scanDetails + "'" + ", memberDetails='" + memberDetails + "'" + "}";
     }
 
 }
