@@ -1,6 +1,7 @@
 package com.bohniman.travelpermit.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.bohniman.travelpermit.model.QrCodeData;
 
@@ -16,5 +17,7 @@ public interface QrCodeDataRepo extends JpaRepository<QrCodeData, Long> {
 
     List<QrCodeData> findAllByReachedScreeningCenterAndDestinationDistrictAndStatus(boolean reportedAtScreening,
             String district, String status);
+
+    Optional<QrCodeData> findByTokenId(String token);
 
 }

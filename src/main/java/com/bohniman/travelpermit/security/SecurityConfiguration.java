@@ -49,9 +49,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         String[] unloggedUrls = { "/", "/login", "/no-role", "/genCaptcha.png" };
 
         http.authorizeRequests().antMatchers(unloggedUrls).permitAll().antMatchers("/admin/**").hasAuthority("ADMIN")
-                .antMatchers("/district/**").hasAuthority("DISTRICT").anyRequest().authenticated().and().csrf()
-                .disable().formLogin().loginPage("/login").authenticationDetailsSource(detailsSource)
-                .successHandler(successHandler()).failureHandler(loginFailureHandler()).and().logout()
+                .antMatchers("/district/**").hasAuthority("DISTRICT").antMatchers("/deo/**").hasAuthority("DEO")
+                .anyRequest().authenticated().and().csrf().disable().formLogin().loginPage("/login")
+                .authenticationDetailsSource(detailsSource).successHandler(successHandler())
+                .failureHandler(loginFailureHandler()).and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/").and()
                 .exceptionHandling().accessDeniedPage("/access-denied").and().httpBasic().disable();
     }

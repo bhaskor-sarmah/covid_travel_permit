@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DistrictService {
 
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");
+
     @Autowired
     UserRepository userRepo;
 
@@ -49,10 +51,10 @@ public class DistrictService {
                 passengerDetails.setScreening_center(mem.getAssignedScreeningCenter());
                 for (QrcodeScanDetail scanDetail : scanDetails) {
                     if (scanDetail.getScanLocation().isScreeningCenter() == false) {
-                        passengerDetails.setArrival_time(scanDetail.getScanDateTime().toString());
+                        passengerDetails.setArrival_time(sdf.format(scanDetail.getScanDateTime()));
                     }
                     if (scanDetail.getScanLocation().isScreeningCenter() == true) {
-                        passengerDetails.setReporting_time(scanDetail.getScanDateTime().toString());
+                        passengerDetails.setReporting_time(sdf.format(scanDetail.getScanDateTime()));
                     }
                     passengerDetails.setTimeDiff(
                             DateUtil.friendlyTimeDiff(dt.getTime() - scanDetail.getScanDateTime().getTime()));
@@ -86,10 +88,10 @@ public class DistrictService {
                 passengerDetails.setScreening_center(mem.getAssignedScreeningCenter());
                 for (QrcodeScanDetail scanDetail : scanDetails) {
                     if (scanDetail.getScanLocation().isScreeningCenter() == false) {
-                        passengerDetails.setArrival_time(scanDetail.getScanDateTime().toString());
+                        passengerDetails.setArrival_time(sdf.format(scanDetail.getScanDateTime()));
                     }
                     if (scanDetail.getScanLocation().isScreeningCenter() == true) {
-                        passengerDetails.setReporting_time(scanDetail.getScanDateTime().toString());
+                        passengerDetails.setReporting_time(sdf.format(scanDetail.getScanDateTime()));
                     }
                     passengerDetails.setTimeDiff(
                             DateUtil.friendlyTimeDiff(dt.getTime() - scanDetail.getScanDateTime().getTime()));

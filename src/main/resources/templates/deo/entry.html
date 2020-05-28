@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+
+<head>
+    <span th:replace="fragments/deo_fragments :: head('e-TravelPermit')">
+    </span>
+    <span th:replace="fragments/deo_fragments :: common-css"></span>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <span th:replace="fragments/deo_fragments :: side-navbar('home','')"></span>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <span th:replace="fragments/deo_fragments :: top-navbar"></span>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <form autocomplete="off" th:action="@{/deo/saveMemberDetails}" th:object="${member}"
+                                method="POST" onsubmit="return checkForm();">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">
+                                            Update Member Details
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="token">
+                                                        Token Number
+                                                    </label>
+                                                    <input type="text" id="token" name="token"
+                                                        placeholder="Enter Token Number" class="form-control"
+                                                        th:value="${token}" readonly="readonly">
+                                                    <span id="tokenError" class="error"></span>
+                                                    <input type="hidden" th:field="*{id}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="name">
+                                                        Passenger Name
+                                                    </label>
+                                                    <input type="text" id="name" placeholder="Enter Passenger Name"
+                                                        class="form-control" th:field="*{name}" readonly="readonly" />
+                                                    <span id="nameError" class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="mobile">
+                                                        Passenger Mobile Number
+                                                    </label>
+                                                    <input type="text" id="mobile" placeholder="Enter Mobile Number"
+                                                        class="form-control" th:field="*{mobileNumber}"
+                                                        readonly="readonly" />
+                                                    <span id="mobileError" class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="district">
+                                                        Passenger District
+                                                    </label>
+                                                    <select th:field="*{district}" id="district" class="form-control"
+                                                        readonly="readonly">
+                                                        <option th:each="dist : ${distList}" th:value="${dist.district}"
+                                                            th:text="${dist.district}"></option>
+                                                    </select>
+                                                    <span id="districtError" class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="reportingTime">
+                                                        Reporting Time At Airport
+                                                    </label>
+                                                    <input type="text" id="reportingTime" name="reportingTime"
+                                                        placeholder="Enter Reporting Time" class="form-control"
+                                                        th:value="${reportingTime}" readonly="readonly">
+                                                    <span id="reportingTimeError" class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="screeningLocation">
+                                                        Screening Centre
+                                                    </label>
+                                                    <select id="screeningLocation" class="form-control"
+                                                        readonly="readonly">
+                                                        <option th:each="screen : ${screeningList}"
+                                                            th:value="${screen.id}" th:text="${screen.location}"
+                                                            th:selected=${member.assignedScreeningCenter==screen.location}>
+                                                        </option>
+                                                    </select>
+                                                    <span id="screeningLocationError" class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="estmArrivalTime">
+                                                        Estimated Arrival Time
+                                                    </label>
+                                                    <input type="text" id="estmArrivalTime" name="estmArrivalTime"
+                                                        placeholder="-----" class="form-control" readonly="readonly">
+                                                    <span id="estmArrivalTimeError" class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="address">
+                                                        Address
+                                                    </label>
+                                                    <input type="text" id="address" th:field="*{address}"
+                                                        placeholder="Enter Address" class="form-control">
+                                                    <span id="addressError" class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="thana">
+                                                        Thana
+                                                    </label>
+                                                    <input type="text" id="thana" th:field="*{thana}"
+                                                        placeholder="Enter Thana" class="form-control">
+                                                    <span id="thanaError" class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group">
+                                                    <label for="pincode">
+                                                        Pincode
+                                                    </label>
+                                                    <input type="text" id="pincode" th:field="*{pin}"
+                                                        placeholder="Enter Pincode" class="form-control">
+                                                    <span id="pincodeError" class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-md-6 mb-4">
+                                                <div class="form-group" style="padding-top: 7px;;"><br />
+                                                    <input type="submit" id="btn-form-final-submit"
+                                                        class="btn btn-success" name="submit" value="Save Details" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span th:replace="fragments/deo_fragments :: footer"></span>
+        </div>
+    </div>
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <span th:replace="fragments/deo_fragments :: common-js('')"></span>
+    <script>
+        $(document).ready(function () {
+            $("#sidebarToggle").trigger('click');
+        });
+        function checkForm() {
+            // alert($("#pincode").val().length);
+            if ($("#pincode").val().length != 6 || isNaN($("#pincode").val())) {
+                $.alert({
+                    title: 'Error',
+                    content: 'Invalid Pincode !',
+                    type: 'red',
+                    typeAnimated: true
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <script th:if="${msgSuccess}" th:inline="javascript">
+        /*<![CDATA[*/
+        var msg = /*[[${msgSuccess}]]*/ "";
+        /*]]>*/
+        $.alert({
+            title: 'Success!',
+            content: msg,
+            type: 'green',
+            typeAnimated: true
+        });
+    </script>
+    <script th:if="${msgError}" th:inline="javascript">
+        /*<![CDATA[*/
+        var msg = /*[[${msgError}]]*/ "";
+        /*]]>*/
+        $.alert({
+            title: 'Error!',
+            content: msg,
+            type: 'red',
+            typeAnimated: true
+        });
+    </script>
+</body>
+
+</html>

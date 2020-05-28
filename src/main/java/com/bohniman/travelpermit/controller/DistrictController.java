@@ -19,7 +19,6 @@ public class DistrictController {
 
     @GetMapping(value = { "/home" })
     public ModelAndView noRole(ModelAndView mv) {
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mv = new ModelAndView("district/index");
         return mv;
     }
