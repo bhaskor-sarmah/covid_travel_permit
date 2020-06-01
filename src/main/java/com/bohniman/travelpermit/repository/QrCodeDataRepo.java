@@ -22,14 +22,4 @@ public interface QrCodeDataRepo extends JpaRepository<QrCodeData, Long> {
 
     List<QrCodeData> findAllByReachedScreeningCenterAndStatus(boolean b, String string);
 
-    QrCodeData findByStatusAndUsernameAndEntryStatus(String string, String username, String string2);
-
-    QrCodeData findTopByOrderByTokenIdAsc();
-
-    QrCodeData findTopByStatusOrderByTokenIdAsc(String string);
-
-    QrCodeData findTopByStatusAndEntryStatusNotOrderByTokenIdAsc(String string, String string2);
-
-    QrCodeData findTopByStatusAndEntryStatusIsNullOrderByTokenIdAsc(String string);
-
 }

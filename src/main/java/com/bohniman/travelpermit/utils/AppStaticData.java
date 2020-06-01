@@ -26,4 +26,12 @@ public class AppStaticData {
     public static final String SEARCH_BY_CREATED_DATE = "CREATED_DATE";
     public static final String SEARCH_BY_JOURNEY_DATE = "JOURNEY_DATE";
 
+    public static final String ENTRY_STATUS_COMPLETED = "COMPLETED";
+    public static final String ENTRY_STATUS_PENDING = "PENDING";
+    public static final String ENTRY_STATUS_DUPLICATE = "DUPLICATE";
+    public static final String ENTRY_STATUS_ERROR = "ERROR";
+
+    public static final String ATTEMPT_ONE = "FIRST";
+    public static final String ATTEMPT_TWO = "SECOND";
+
 }
