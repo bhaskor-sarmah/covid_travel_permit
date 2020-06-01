@@ -20,6 +20,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import org.hibernate.annotations.Type;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * QrCodeData Date : 09-05-2020
  * 
@@ -27,6 +31,9 @@ import org.hibernate.annotations.Type;
  */
 @Entity
 @Table(name = "qrcode_data")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class QrCodeData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -68,80 +75,8 @@ public class QrCodeData implements Serializable {
     // )
     private List<QrCodeMemberDetail> memberDetails = new ArrayList<QrCodeMemberDetail>();
 
-    public QrCodeData() {
-    }
-
-    public QrCodeData(Long id, String tokenId, String destinationDistrict, Boolean reachedScreeningCenter,
-            List<QrcodeScanDetail> scanDetails, List<QrCodeMemberDetail> memberDetails) {
-        this.id = id;
-        this.tokenId = tokenId;
-        this.destinationDistrict = destinationDistrict;
-        this.reachedScreeningCenter = reachedScreeningCenter;
-        this.scanDetails = scanDetails;
-        this.memberDetails = memberDetails;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTokenId() {
-        return this.tokenId;
-    }
-
-    public void setTokenId(String tokenId) {
-        this.tokenId = tokenId;
-    }
-
-    public String getDestinationDistrict() {
-        return this.destinationDistrict;
-    }
-
-    public void setDestinationDistrict(String destinationDistrict) {
-        this.destinationDistrict = destinationDistrict;
-    }
-
-    public Boolean isReachedScreeningCenter() {
-        return this.reachedScreeningCenter;
-    }
-
-    public Boolean getReachedScreeningCenter() {
-        return this.reachedScreeningCenter;
-    }
-
-    public void setReachedScreeningCenter(Boolean reachedScreeningCenter) {
-        this.reachedScreeningCenter = reachedScreeningCenter;
-    }
-
-    public List<QrcodeScanDetail> getScanDetails() {
-        return this.scanDetails;
-    }
-
-    public void setScanDetails(List<QrcodeScanDetail> scanDetails) {
-        this.scanDetails = scanDetails;
-    }
-
-    public List<QrCodeMemberDetail> getMemberDetails() {
-        return this.memberDetails;
-    }
-
-    public void setMemberDetails(List<QrCodeMemberDetail> memberDetails) {
-        this.memberDetails = memberDetails;
-    }
-
-    public void addScanDetails(QrcodeScanDetail scanDetails) {
-        this.scanDetails.add(scanDetails);
-    }
-
-    @Override
-    public String toString() {
-        return "{" + " id='" + id + "'" + ", tokenId='" + tokenId + "'" + ", destinationDistrict='"
-                + destinationDistrict + "'" + ", reachedScreeningCenter='" + reachedScreeningCenter + "'"
-                + ", scanDetails='" + scanDetails + "'" + ", memberDetails='" + memberDetails + "'" + "}";
-    }
+    private String imagePath;
+    private String username;
+    private String entryStatus; // Pending/Completed
 
 }
