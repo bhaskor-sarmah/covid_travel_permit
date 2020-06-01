@@ -35,11 +35,12 @@ public class QrCodePayload {
     private String assignedScreeningCenter;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm a")
+    // @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm a")
+    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm a")
     private Date reportingTimeAtAirport;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm a")
+    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm a")
     private Date estimatedArivalTime;
 
     private String attemptNumber;

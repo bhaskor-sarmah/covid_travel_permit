@@ -12,7 +12,7 @@
             height: 50px;
             border: 2px solid gray
         }
-        
+
         .active-thumbnail {
             border: 4px solid #4e73df !important;
         }
@@ -35,50 +35,61 @@
                                             <strong>* SCROLL THE MOUSE WHEEL TO ZOOM</strong>
                                         </div>
                                         <div class="col-md-4">
-                                            <button onclick="document.getElementById('doc-image').dispatchEvent(new CustomEvent('wheelzoom.reset'));" class="btn btn-primary btn-sm float-right"><i class="fa fa-redo"></i> Reset
-                                            Zoom</button>
+                                            <button
+                                                onclick="document.getElementById('doc-image').dispatchEvent(new CustomEvent('wheelzoom.reset'));"
+                                                class="btn btn-primary btn-sm float-right"><i class="fa fa-redo"></i>
+                                                Reset
+                                                Zoom</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-12 mb-1" style="height:70vh;overflow-x: auto;">
-                                    <img class="img-fluid img-thumbnail" th:src="@{/images/emblem - Copy.png}" id="doc-image" style="width:100%; height:70vh;">
+                                    <img class="img-fluid img-thumbnail" th:src="@{/images/no-data.svg}" id="doc-image"
+                                        style="width:100%; height:70vh;">
                                 </div>
                                 <div class="col-md-12 text-center">
-                                    <a onclick="javascript:void(0)" href="#"><img id="thumbnail-1" th:src="@{/images/emblem - Copy.png}" class="rounded thumbnail active-thumbnail" alt="..."></a>
-                                    <a onclick="javascript:void(0)" href="#"><img id="thumbnail-2" th:src="@{/images/user.jpg}" class="rounded thumbnail" alt="..."></a>
-                                    <a onclick="javascript:void(0)" href="#"><img id="thumbnail-3" th:src="@{/images/user.jpg}" class="rounded thumbnail" alt="..."></a>
-                                    <a onclick="javascript:void(0)" href="#"><img id="thumbnail-4" th:src="@{/images/user.jpg}" class="rounded thumbnail" alt="..."></a>
-                                    <a onclick="javascript:void(0)" href="#"><img id="thumbnail-5" th:src="@{/images/emblem - Copy.png}" class="rounded thumbnail" alt="..."></a>
-                                    <a onclick="javascript:void(0)" href="#"><img id="thumbnail-6" th:src="@{/images/user.jpg}" class="rounded thumbnail" alt="..."></a>
-                                    <a onclick="javascript:void(0)" href="#"><img id="thumbnail-7" th:src="@{/images/user.jpg}" class="rounded thumbnail" alt="..."></a>
-                                    <a onclick="javascript:void(0)" href="#"><img id="thumbnail-8" th:src="@{/images/user.jpg}" class="rounded thumbnail" alt="..."></a>
+                                    <a onclick="javascript:void(0)" href="#" th:if="${not #lists.isEmpty(documents)}"
+                                        th:each="doc,iter : ${documents}"><img th:attr="id=${iter.count}"
+                                            th:src="@{/deo/get-image/__${doc.id}__}"
+                                            class="rounded thumbnail active-thumbnail" alt="..."></a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 img-thumbnail" id="two" style="height:85vh; overflow-y:auto;">
                             <span class="text-success" th:if=${flashMessage!=null} th:text=${flashMessage}></span>
-                            <form autocomplete="off" th:action="@{/deo/save-entry}" th:object="${qrCodePayload}" method="POST" onsubmit="return checkForm();">
+                            <form autocomplete="off" th:action="@{/deo/save-entry}" th:object="${qrCodePayload}"
+                                method="POST" onsubmit="return checkForm();">
+                                <div class="form-group">
+                                    <!-- <label for="exampleFormControlInput1">Token Number</label> -->
+                                    <input type="hidden" class="form-control" th:field="*{clickedDataId}" readonly>
+                                    <input type="hidden" class="form-control" th:field="*{attemptNumber}" readonly>
+                                </div>
                                 <div class="form-group">
                                     <label for="exampleFormControlInput1">Token Number</label>
-                                    <input type="text" class="form-control" th:field="*{tokenId}" readonly>
+                                    <input type="text" class="form-control" th:field="*{tokenId}" required
+                                        onkeyup="updateAttempt();">
                                 </div>
                                 <div class="form-group">
                                     <label for="name">
                                         Passenger Name
                                     </label>
-                                    <input type="text" placeholder="Enter Passenger Name" class="form-control" th:field="*{name}" required autofocus/>
+                                    <input type="text" placeholder="Enter Passenger Name" class="form-control"
+                                        th:field="*{name}" required autofocus />
                                 </div>
                                 <div class="form-group">
                                     <label for="mobile">
                                         Passenger Mobile Number
                                     </label>
-                                    <input type="text" placeholder="Enter Mobile Number" class="form-control" th:field="*{mobileNumber}" minlength="10" maxlength="10" required onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" />
+                                    <input type="text" placeholder="Enter Mobile Number" class="form-control"
+                                        th:field="*{mobileNumber}" minlength="10" maxlength="10" required
+                                        onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" />
                                 </div>
                                 <div class="form-group">
                                     <label for="district">
                                         Reporting Time at Airport
                                     </label>
-                                    <input type="text" placeholder="Reporting time at airport" class="form-control" th:field="*{reportingTimeAtAirport}" />
+                                    <input type="text" placeholder="Reporting time at airport" class="form-control"
+                                        th:field="*{reportingTimeAtAirport}" />
                                 </div>
 
                                 <div class="form-group">
@@ -88,7 +99,8 @@
                                     <select name="district" class="form-control" required>
                                         <option selected disabled value="">---Select---</option>
                                         <option th:each="dist : ${distList}" th:value="${dist.district}"
-                                            th:text="${dist.district}"></option>
+                                            th:text="${dist.district}"
+                                            th:selected=${dist.district==qrCodePayload.district}></option>
                                     </select>
                                 </div>
 
@@ -99,7 +111,8 @@
                                     <select name="assignedScreeningCenter" class="form-control" required>
                                         <option selected disabled value="">---Select---</option>
                                         <option th:each="screen : ${screeningList}" th:value="${screen.location}"
-                                            th:text="${screen.location}">
+                                            th:text="${screen.location}"
+                                            th:selected=${screen.location==qrCodePayload.assignedScreeningCenter}>
                                         </option>
                                     </select>
                                 </div>
@@ -108,26 +121,31 @@
                                     <label for="district">
                                         Estimated Arrival Time
                                     </label>
-                                    <input type="text" placeholder="Estimated arrival time" class="form-control" th:field="*{estimatedArivalTime}" />
+                                    <input type="text" placeholder="Estimated arrival time" class="form-control"
+                                        th:field="*{estimatedArivalTime}" />
                                 </div>
 
                                 <div class="form-group">
                                     <label for="address">
                                         Address
                                     </label>
-                                    <input type="text" name="address" th:field="*{address}" placeholder="Enter Address" class="form-control">
+                                    <input type="text" name="address" th:field="*{address}" placeholder="Enter Address"
+                                        class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="thana">
                                         Thana
                                     </label>
-                                    <input type="text" name="thana" th:field="*{thana}" placeholder="Enter Thana" class="form-control">
+                                    <input type="text" name="thana" th:field="*{thana}" placeholder="Enter Thana"
+                                        class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="pincode">
                                         Pincode
                                     </label>
-                                    <input type="text" name="pincode" th:field="*{pin}" placeholder="Enter Pincode" class="form-control" minlength="6" maxlength="6" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+                                    <input type="text" name="pincode" th:field="*{pin}" placeholder="Enter Pincode"
+                                        class="form-control" minlength="6" maxlength="6"
+                                        onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                                     <span id="pincodeError" class="error"></span>
                                 </div>
                                 <div class="form-group">
@@ -149,30 +167,31 @@
     <script th:src="@{/plugins/moment/moment.min.js}"></script>
     <script th:src="@{/plugins/datepicker/bootstrap-datetimepicker.min.js}"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#sidebarToggle").trigger('click');
             $('#reportingTimeAtAirport').datetimepicker({
                 inline: true,
                 sideBySide: true,
-                format: "YYYY-MM-DD hh:mm a"
+                format: "DD-MM-YYYY hh:mm a"
             });
             $('#estimatedArivalTime').datetimepicker({
                 inline: true,
                 sideBySide: true,
-                format: "YYYY-MM-DD hh:mm a"
+                format: "DD-MM-YYYY hh:mm a"
             });
 
             document.getElementById("name").focus();
 
-            $(document).on('click', '.thumbnail', function(e) {
-                document.getElementById('doc-image').dispatchEvent(new CustomEvent('wheelzoom.destroy'));
+            $(document).on('click', '.thumbnail', function (e) {
+                document.getElementById('doc-image').dispatchEvent(new CustomEvent(
+                    'wheelzoom.destroy'));
                 $('#doc-image').attr("src", $(this).attr("src"));
                 wheelzoom(document.getElementById('doc-image'));
                 $(".thumbnail").removeClass("active-thumbnail");
                 $(this).addClass("active-thumbnail");
             });
 
-            $('#thumbnail-1').trigger("click");
+            $('#1').trigger("click");
         });
 
         function checkForm() {
@@ -187,6 +206,10 @@
                 return false;
             }
             return true;
+        }
+
+        function updateAttempt() {
+            $("#attemptNumber").val("FIRST");
         }
     </script>
     <script th:if="${msgSuccess}" th:inline="javascript">
@@ -207,6 +230,18 @@
         $.alert({
             title: 'Error!',
             content: msg,
+            type: 'red',
+            typeAnimated: true
+        });
+    </script>
+
+    <script th:if="${flashMessage!=''}" th:inline="javascript">
+        /*<![CDATA[*/
+        var flashMessage = /*[[${flashMessage}]]*/ "";
+        /*]]>*/
+        $.alert({
+            title: 'Message',
+            content: flashMessage,
             type: 'red',
             typeAnimated: true
         });

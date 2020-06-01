@@ -55,28 +55,36 @@ public class DeoController {
 
     @GetMapping(value = { "/new-entry" })
     public ModelAndView newEntry(ModelAndView mv, @ModelAttribute("flashMessage") String flashMessage,
-            @ModelAttribute("qrCodePayload") QrCodePayload qrCodePayload) {
+            @ModelAttribute("qrCodePayload") QrCodePayload qrCodePayload,
+            @ModelAttribute("entryStatus") String entryStatus) {
 
+        mv = new ModelAndView("deo/new-entry");
         String username = LoggedInUser.getLoggedInUsername();
 
         ClickedData clickedData = deoService.getClickedData(username);
 
-        if (Objects.equals(qrCodePayload, null)) {
-            qrCodePayload = new QrCodePayload();
-            qrCodePayload.setClickedDataId(clickedData.getId());
-            qrCodePayload.setTokenId(clickedData.getTokenId());
-            qrCodePayload.setAttemptNumber(AppStaticData.ATTEMPT_ONE);
+        if (!Objects.equals(clickedData, null)) {
+            if (Objects.equals(qrCodePayload.getClickedDataId(), null)) {
+                qrCodePayload = new QrCodePayload();
+                qrCodePayload.setClickedDataId(clickedData.getId());
+                qrCodePayload.setTokenId(clickedData.getTokenId());
+                qrCodePayload.setAttemptNumber(AppStaticData.ATTEMPT_ONE);
+            }
+            mv.addObject("documents", clickedData.getDocuments());
+            mv.addObject("flashMessage", flashMessage);
         } else {
-            qrCodePayload.setAttemptNumber(AppStaticData.ATTEMPT_TWO);
+            if (Objects.equals(entryStatus, AppStaticData.ENTRY_STATUS_COMPLETED)) {
+                mv.addObject("flashMessage", "Data saved successfully. But no more token available.");
+            } else {
+                mv.addObject("flashMessage", "No token id found.");
+            }
         }
 
-        mv = new ModelAndView("deo/new-entry");
-        mv.addObject("documents", clickedData.getDocuments());
         mv.addObject("qrCodePayload", qrCodePayload);
         mv.addObject("distList", deoService.getAllDistrict());
         mv.addObject("screeningList", deoService.getAllScreeningCentre());
-        mv.addObject("flashMessage", flashMessage);
         System.out.println(clickedData);
+        System.out.println(qrCodePayload);
         return mv;
     }
 
@@ -88,11 +96,16 @@ public class DeoController {
             Map<String, String> result = deoService.saveEntry(qrCodePayload, username);
             if (result.containsKey(AppStaticData.ENTRY_STATUS_COMPLETED)) {
                 attributes.addFlashAttribute("flashMessage", result.get(AppStaticData.ENTRY_STATUS_COMPLETED));
+                attributes.addFlashAttribute("entryStatus", AppStaticData.ENTRY_STATUS_COMPLETED);
             } else if (result.containsKey(AppStaticData.ENTRY_STATUS_DUPLICATE)) {
+                qrCodePayload.setAttemptNumber(AppStaticData.ATTEMPT_TWO);
                 attributes.addFlashAttribute("flashMessage", result.get(AppStaticData.ENTRY_STATUS_DUPLICATE));
+                attributes.addFlashAttribute("entryStatus", AppStaticData.ENTRY_STATUS_DUPLICATE);
                 attributes.addFlashAttribute("qrCodePayload", qrCodePayload);
             } else if (result.containsKey(AppStaticData.ENTRY_STATUS_ERROR)) {
+                qrCodePayload.setAttemptNumber(AppStaticData.ATTEMPT_ONE);
                 attributes.addFlashAttribute("flashMessage", result.get(AppStaticData.ENTRY_STATUS_ERROR));
+                attributes.addFlashAttribute("entryStatus", AppStaticData.ENTRY_STATUS_ERROR);
                 attributes.addFlashAttribute("qrCodePayload", qrCodePayload);
             }
 
@@ -100,8 +113,11 @@ public class DeoController {
             Map<String, String> result = deoService.duplicateEntry(qrCodePayload, username);
             if (result.containsKey(AppStaticData.ENTRY_STATUS_COMPLETED)) {
                 attributes.addFlashAttribute("flashMessage", result.get(AppStaticData.ENTRY_STATUS_COMPLETED));
+                attributes.addFlashAttribute("entryStatus", AppStaticData.ENTRY_STATUS_COMPLETED);
             } else if (result.containsKey(AppStaticData.ENTRY_STATUS_ERROR)) {
+                qrCodePayload.setAttemptNumber(AppStaticData.ATTEMPT_ONE);
                 attributes.addFlashAttribute("flashMessage", result.get(AppStaticData.ENTRY_STATUS_ERROR));
+                attributes.addFlashAttribute("entryStatus", AppStaticData.ENTRY_STATUS_ERROR);
                 attributes.addFlashAttribute("qrCodePayload", qrCodePayload);
             }
         }

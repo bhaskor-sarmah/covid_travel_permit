@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Null;
 
@@ -113,6 +114,7 @@ public class DeoService {
     // return qrCodePayload;
     // }
 
+    @Transactional(rollbackOn = Exception.class)
     public Map<String, String> saveEntry(QrCodePayload qrCodePayload, String username) {
 
         Map<String, String> result = new HashMap<>();
@@ -138,6 +140,8 @@ public class DeoService {
                 qrCodeData.setMemberDetails(members);
                 qrCodeData.setReachedScreeningCenter(false);
                 qrCodeData.setDestinationDistrict(qrCodePayload.getDistrict());
+                qrCodeData.setTokenId(qrCodePayload.getTokenId());
+                qrCodeData.setStatus("ACTIVE");
 
                 qrCodeDataRepo.save(qrCodeData);
 
@@ -149,7 +153,8 @@ public class DeoService {
                     clickedData.setEntryStatus(AppStaticData.ENTRY_STATUS_COMPLETED);
                     clickedDataRepository.save(clickedData);
 
-                    result.put(AppStaticData.ENTRY_STATUS_COMPLETED, "Data saved successfully. Please try again.");
+                    result.put(AppStaticData.ENTRY_STATUS_COMPLETED,
+                            "Data saved successfully. Next token number loaded.");
                 } else {
 
                     result.put(AppStaticData.ENTRY_STATUS_ERROR, "Invalid data. Please try again.");
@@ -187,7 +192,8 @@ public class DeoService {
                         clickedData.setEntryStatus(AppStaticData.ENTRY_STATUS_COMPLETED);
                         clickedDataRepository.save(clickedData);
 
-                        result.put(AppStaticData.ENTRY_STATUS_COMPLETED, "Data saved successfully. Please try again.");
+                        result.put(AppStaticData.ENTRY_STATUS_COMPLETED,
+                                "Data saved successfully. Next token number loaded.");
                     } else {
 
                         result.put(AppStaticData.ENTRY_STATUS_ERROR, "Invalid data. Please try again.");
@@ -195,7 +201,7 @@ public class DeoService {
 
                 } else {
                     result.put(AppStaticData.ENTRY_STATUS_DUPLICATE,
-                            "Duplicate data. Are you sure want to mark it as Duplicate ?");
+                            "Duplicate data. If you want to mark it as duplicate, submit again.");
                 }
             } catch (Exception e) {
                 result.put(AppStaticData.ENTRY_STATUS_ERROR, "Couldn't save data. Please try again.");
@@ -206,19 +212,25 @@ public class DeoService {
     }
 
     public ClickedData getClickedData(String username) {
-        ClickedData clickedData = clickedDataRepository.findByUsernameAndEntryStatus(username, "Pending");
-        if (Objects.equals(clickedData, null)) {
-            clickedData = clickedDataRepository.findTopByEntryStatusIsNullOrderByIdAsc();
-            clickedData.setUsername(username);
-            clickedData.setEntryStatus(AppStaticData.ENTRY_STATUS_PENDING);
-            clickedDataRepository.save(clickedData);
+        try {
+            ClickedData clickedData = clickedDataRepository.findByUsernameAndEntryStatus(username, "Pending");
+            if (Objects.equals(clickedData, null)) {
+                clickedData = clickedDataRepository.findTopByEntryStatusIsNullOrderByIdAsc();
+                if (!Objects.equals(clickedData, null)) {
+                    clickedData.setUsername(username);
+                    clickedData.setEntryStatus(AppStaticData.ENTRY_STATUS_PENDING);
+                    clickedDataRepository.save(clickedData);
+                    for (Document document : clickedData.getDocuments()) {
+                        document.setByteFile(null);
+                        document.setFile(null);
+                    }
+                }
+            }
+            return clickedData;
+        } catch (Exception e) {
+            return null;
         }
 
-        for (Document document : clickedData.getDocuments()) {
-            document.setByteFile(null);
-            document.setFile(null);
-        }
-        return clickedData;
     }
 
     public Map<String, String> duplicateEntry(@Valid QrCodePayload qrCodePayload, String username) {
