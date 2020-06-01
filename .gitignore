@@ -14,7 +14,7 @@ target/
 .sts4-cache
 
 ### Third Party Plugins
-/src/main/resources/static/plugins/
+# /src/main/resources/static/plugins/
 
 ### IntelliJ IDEA ###
 .idea
