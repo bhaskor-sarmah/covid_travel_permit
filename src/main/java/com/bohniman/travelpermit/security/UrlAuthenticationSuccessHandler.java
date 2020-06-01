@@ -53,6 +53,8 @@ public class UrlAuthenticationSuccessHandler implements AuthenticationSuccessHan
         for (final GrantedAuthority grantedAuthority : authorities) {
             if (grantedAuthority.getAuthority().equals("ADMIN")) {
                 return "/admin/home";
+            } else if (grantedAuthority.getAuthority().equals("STATE")) {
+                return "/state/home";
             } else if (grantedAuthority.getAuthority().equals("DISTRICT")) {
                 return "/district/home";
             } else if (grantedAuthority.getAuthority().equals("DEO")) {

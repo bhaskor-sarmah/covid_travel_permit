@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+
+<head>
+    <span th:replace="fragments/state_fragments :: head('e-TravelPermit')">
+    </span>
+    <span th:replace="fragments/state_fragments :: common-css"></span>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <span th:replace="fragments/state_fragments :: side-navbar('reportingPending','')"></span>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <span th:replace="fragments/state_fragments :: top-navbar"></span>
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Passengers Reporting Pending at Screening
+                                Center</h6>
+                        </div>
+                        <div class="card-body">
+                            <table id="myTable" class="table table-bordered table-responsive" width="100"
+                                style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Sl. No.</th>
+                                        <th>Token Number</th>
+                                        <th>Screening Center</th>
+                                        <th>Name</th>
+                                        <th>Mobile</th>
+                                        <th>District</th>
+                                        <th>Thana</th>
+                                        <th>Address</th>
+                                        <th>Pin</th>
+                                        <th>Arrival</th>
+                                        <th>Time Since Arrival</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="s,iterator : ${passengerList}">
+                                        <td th:text="${iterator.index+1}"></td>
+                                        <td th:text="${s.tokenNo}"></td>
+                                        <td th:text="${s.screening_center}"></td>
+                                        <td th:text="${s.name}"></td>
+                                        <td th:text="${s.phone}"></td>
+                                        <td th:text="${s.district}"></td>
+                                        <td th:text="${s.thana}"></td>
+                                        <td th:text="${s.address}"></td>
+                                        <td th:text="${s.pincode}"></td>
+                                        <td th:text="${s.arrival_time}"></td>
+                                        <td th:text="${s.timeDiff}"></td>
+                                        <td>
+                                            <!-- <form th:action="@{/state/updateStatus}" method="POST"
+                                                onsubmit="return doConfirm();">
+                                                <input type="hidden" name="token" th:value="${s.tokenNo}" />
+                                                <input type="submit" name="submit" value="Hide Permanently"
+                                                    class="btn btn-sm btn-primary" />
+                                            </form> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <span th:replace="fragments/state_fragments :: footer"></span>
+        </div>
+    </div>
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <span th:replace="fragments/state_fragments :: common-js('')"></span>
+    <script>
+        $(document).ready(function () {
+            $("#sidebarToggle").trigger('click');
+
+            $("#myTable").dataTable();
+            function doConfirm() {
+                if ($.confirm({
+                    title: 'Confirm',
+                    content: 'Are you sure you want to hide this record permanemtly ?',
+                    type: 'green',
+                    typeAnimated: true
+                })) {
+                    return true;
+                }
+                return false;
+            }
+        });
+    </script>
+</body>
+
+</html>

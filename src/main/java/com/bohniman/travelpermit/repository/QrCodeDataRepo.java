@@ -20,4 +20,6 @@ public interface QrCodeDataRepo extends JpaRepository<QrCodeData, Long> {
 
     Optional<QrCodeData> findByTokenId(String token);
 
+    List<QrCodeData> findAllByReachedScreeningCenterAndStatus(boolean b, String string);
+
 }
