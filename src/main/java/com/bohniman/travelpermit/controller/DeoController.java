@@ -17,6 +17,7 @@ import com.bohniman.travelpermit.model.Document;
 import com.bohniman.travelpermit.model.QrCodeData;
 import com.bohniman.travelpermit.model.QrCodeMemberDetail;
 import com.bohniman.travelpermit.model.QrcodeScanDetail;
+import com.bohniman.travelpermit.model.ScanLocation;
 import com.bohniman.travelpermit.payload.QrCodePayload;
 import com.bohniman.travelpermit.services.DeoService;
 import com.bohniman.travelpermit.utils.AppStaticData;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -84,6 +86,7 @@ public class DeoController {
         mv.addObject("screeningList", deoService.getAllScreeningCentre());
         System.out.println(clickedData);
         System.out.println(qrCodePayload);
+        System.out.println(deoService.getAllDistrict());
         return mv;
     }
 
@@ -155,6 +158,13 @@ public class DeoController {
             response.getOutputStream().close();
         }
 
+    }
+
+    @GetMapping(value = "/get-scan-center/{districtName}")
+    @ResponseBody
+    public List<ScanLocation> getImage(@PathVariable(name = "districtName") String districtName) {
+        List<ScanLocation> scanLocations = deoService.getSanLocations(districtName);
+        return scanLocations;
     }
 
     @PostMapping(value = { "/getMemberDetails" })

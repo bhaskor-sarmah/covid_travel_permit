@@ -23,15 +23,18 @@ public interface QrCodeDataRepo extends JpaRepository<QrCodeData, Long> {
 
         List<QrCodeData> findAllByReachedScreeningCenterAndStatus(boolean b, String string);
 
-        QrCodeData findByStatusAndUsernameAndEntryStatus(String string, String username, String string2);
+        // QrCodeData findByStatusAndUsernameAndEntryStatus(String string, String
+        // username, String string2);
 
         QrCodeData findTopByOrderByTokenIdAsc();
 
-        QrCodeData findTopByStatusOrderByTokenIdAsc(String string);
+        // QrCodeData findTopByStatusOrderByTokenIdAsc(String string);
 
-        QrCodeData findTopByStatusAndEntryStatusNotOrderByTokenIdAsc(String string, String string2);
+        // QrCodeData findTopByStatusAndEntryStatusNotOrderByTokenIdAsc(String string,
+        // String string2);
 
-        QrCodeData findTopByStatusAndEntryStatusIsNullOrderByTokenIdAsc(String string);
+        // QrCodeData findTopByStatusAndEntryStatusIsNullOrderByTokenIdAsc(String
+        // string);
 
         @Query(value = "SELECT COUNT(*) FROM (SELECT * FROM (SELECT a.token_id,a.reached_screening_center,SUBSTRING_INDEX(b.scan_date_time,\" \",1) AS `date`,SUBSTRING_INDEX(b.scan_date_time,\" \",-1) AS `time`,e.name,e.mobile_number,e.district "
                         + "FROM qrcode_data a,qrcode_scan_detail b,qrcode_data_qrcode_member_detail_mapping c,qrcode_data_qrcode_scan_detail_mapping d,qrcode_member_detail e "
