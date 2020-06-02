@@ -17,12 +17,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QrCodePayload {
 
-    private Long id;
+    private Long clickedDataId;
     private String tokenId;
     private String destinationDistrict;
-    private String imagePath;
-    private String username;
-    private String entryStatus; // Pending/Completed
 
     // member details
     @NotBlank(message = "Name is required.")
@@ -38,11 +35,14 @@ public class QrCodePayload {
     private String assignedScreeningCenter;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm a")
+    // @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm a")
+    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm a")
     private Date reportingTimeAtAirport;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm a")
+    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm a")
     private Date estimatedArivalTime;
+
+    private String attemptNumber;
 
 }

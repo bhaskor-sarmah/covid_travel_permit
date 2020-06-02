@@ -6,6 +6,17 @@
     </span>
     <span th:replace="fragments/deo_fragments :: common-css"></span>
     <link rel="stylesheet" th:href="@{/plugins/datepicker/bootstrap-datetimepicker.min.css}" />
+    <style>
+        .rounded {
+            width: 50px;
+            height: 50px;
+            border: 2px solid gray
+        }
+
+        .active-thumbnail {
+            border: 4px solid #4e73df !important;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -16,39 +27,54 @@
                 <span th:replace="fragments/deo_fragments :: top-navbar"></span>
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-md-6 " id="one">
-                            <div class="row pb-2">
-                                <div class="col-md-8 text-danger">
-                                    <strong>* SCROLL THE MOUSE WHEEL TO ZOOM</strong>
-                                </div>
-                                <div class="col-md-4">
-                                    <button
-                                        onclick="document.getElementById('doc-image').dispatchEvent(new CustomEvent('wheelzoom.reset'));"
-                                        class="btn btn-primary btn-sm float-right"><i class="fa fa-redo"></i> Reset
-                                        Zoom</button>
-                                </div>
-                            </div>
+                        <div class="col-md-6  img-thumbnail" id="one">
                             <div class="row">
-                                <div class="col-md-12" style="height:70vh;overflow-x: auto;">
-                                    <img class="img-fluid img-thumbnail"
-                                        th:src="@{/deo/get-image/__${qrCodePayload.tokenId}__}" id="doc-image">
+                                <div class="col-md-12 mb-1">
+                                    <div class="row">
+                                        <div class="col-md-8 text-danger">
+                                            <strong>* SCROLL THE MOUSE WHEEL TO ZOOM</strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button
+                                                onclick="document.getElementById('doc-image').dispatchEvent(new CustomEvent('wheelzoom.reset'));"
+                                                class="btn btn-primary btn-sm float-right"><i class="fa fa-redo"></i>
+                                                Reset
+                                                Zoom</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-1" style="height:70vh;overflow-x: auto;">
+                                    <img class="img-fluid img-thumbnail" th:src="@{/images/no-data.svg}" id="doc-image"
+                                        style="width:100%; height:70vh;">
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <a onclick="javascript:void(0)" href="#" th:if="${not #lists.isEmpty(documents)}"
+                                        th:each="doc,iter : ${documents}"><img th:attr="id=${iter.count}"
+                                            th:src="@{/deo/get-image/__${doc.id}__}"
+                                            class="rounded thumbnail active-thumbnail" alt="..."></a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6" id="two" style="height:75vh; overflow-y:auto;">
+                        <div class="col-md-6 img-thumbnail" id="two" style="height:85vh; overflow-y:auto;">
                             <span class="text-success" th:if=${flashMessage!=null} th:text=${flashMessage}></span>
                             <form autocomplete="off" th:action="@{/deo/save-entry}" th:object="${qrCodePayload}"
                                 method="POST" onsubmit="return checkForm();">
                                 <div class="form-group">
+                                    <!-- <label for="exampleFormControlInput1">Token Number</label> -->
+                                    <input type="hidden" class="form-control" th:field="*{clickedDataId}" readonly>
+                                    <input type="hidden" class="form-control" th:field="*{attemptNumber}" readonly>
+                                </div>
+                                <div class="form-group">
                                     <label for="exampleFormControlInput1">Token Number</label>
-                                    <input type="text" class="form-control" th:field="*{tokenId}" readonly>
+                                    <input type="text" class="form-control" th:field="*{tokenId}" required
+                                        onkeyup="updateAttempt();">
                                 </div>
                                 <div class="form-group">
                                     <label for="name">
                                         Passenger Name
                                     </label>
                                     <input type="text" placeholder="Enter Passenger Name" class="form-control"
-                                        th:field="*{name}" required />
+                                        th:field="*{name}" required autofocus />
                                 </div>
                                 <div class="form-group">
                                     <label for="mobile">
@@ -73,7 +99,8 @@
                                     <select name="district" class="form-control" required>
                                         <option selected disabled value="">---Select---</option>
                                         <option th:each="dist : ${distList}" th:value="${dist.district}"
-                                            th:text="${dist.district}"></option>
+                                            th:text="${dist.district}"
+                                            th:selected=${dist.district==qrCodePayload.district}></option>
                                     </select>
                                 </div>
 
@@ -84,7 +111,8 @@
                                     <select name="assignedScreeningCenter" class="form-control" required>
                                         <option selected disabled value="">---Select---</option>
                                         <option th:each="screen : ${screeningList}" th:value="${screen.location}"
-                                            th:text="${screen.location}">
+                                            th:text="${screen.location}"
+                                            th:selected=${screen.location==qrCodePayload.assignedScreeningCenter}>
                                         </option>
                                     </select>
                                 </div>
@@ -128,7 +156,7 @@
                     </div>
                 </div>
             </div>
-            <span th:replace="fragments/deo_fragments :: footer"></span>
+            <!-- <span th:replace="fragments/deo_fragments :: footer"></span> -->
         </div>
     </div>
     <a class="scroll-to-top rounded" href="#page-top">
@@ -141,17 +169,29 @@
     <script>
         $(document).ready(function () {
             $("#sidebarToggle").trigger('click');
-            wheelzoom(document.getElementById('doc-image'));
             $('#reportingTimeAtAirport').datetimepicker({
                 inline: true,
                 sideBySide: true,
-                format: "YYYY-MM-DD hh:mm a"
+                format: "DD-MM-YYYY hh:mm a"
             });
             $('#estimatedArivalTime').datetimepicker({
                 inline: true,
                 sideBySide: true,
-                format: "YYYY-MM-DD hh:mm a"
+                format: "DD-MM-YYYY hh:mm a"
             });
+
+            document.getElementById("name").focus();
+
+            $(document).on('click', '.thumbnail', function (e) {
+                document.getElementById('doc-image').dispatchEvent(new CustomEvent(
+                    'wheelzoom.destroy'));
+                $('#doc-image').attr("src", $(this).attr("src"));
+                wheelzoom(document.getElementById('doc-image'));
+                $(".thumbnail").removeClass("active-thumbnail");
+                $(this).addClass("active-thumbnail");
+            });
+
+            $('#1').trigger("click");
         });
 
         function checkForm() {
@@ -166,6 +206,10 @@
                 return false;
             }
             return true;
+        }
+
+        function updateAttempt() {
+            $("#attemptNumber").val("FIRST");
         }
     </script>
     <script th:if="${msgSuccess}" th:inline="javascript">
@@ -186,6 +230,18 @@
         $.alert({
             title: 'Error!',
             content: msg,
+            type: 'red',
+            typeAnimated: true
+        });
+    </script>
+
+    <script th:if="${flashMessage!=''}" th:inline="javascript">
+        /*<![CDATA[*/
+        var flashMessage = /*[[${flashMessage}]]*/ "";
+        /*]]>*/
+        $.alert({
+            title: 'Message',
+            content: flashMessage,
             type: 'red',
             typeAnimated: true
         });

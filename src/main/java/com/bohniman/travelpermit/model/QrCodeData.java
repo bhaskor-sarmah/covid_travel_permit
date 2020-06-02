@@ -75,8 +75,4 @@ public class QrCodeData implements Serializable {
     // )
     private List<QrCodeMemberDetail> memberDetails = new ArrayList<QrCodeMemberDetail>();
 
-    private String imagePath;
-    private String username;
-    private String entryStatus; // Pending/Completed
-
 }
