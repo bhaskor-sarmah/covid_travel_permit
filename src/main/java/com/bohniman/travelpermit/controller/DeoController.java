@@ -44,7 +44,6 @@ public class DeoController {
     public ModelAndView noRole(ModelAndView mv) {
         // UserDetails user = (UserDetails)
         // SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         mv = new ModelAndView("deo/index");
         return mv;
     }

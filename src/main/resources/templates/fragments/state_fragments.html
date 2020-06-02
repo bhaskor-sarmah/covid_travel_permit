@@ -77,6 +77,13 @@
     </li>
 
     <!-- Nav Item - Dashboard -->
+    <li class="nav-item" th:classappend="${page == 'allPassengers'} ? active : ''">
+      <a class="nav-link" th:href="@{/state/allPassengers}">
+        <i class="fas fa-fw fa-user-clock"></i>
+        <span>All Passengers</span></a>
+    </li>
+
+    <!-- Nav Item - Dashboard -->
     <li class="nav-item" th:classappend="${page == 'reportingPending'} ? active : ''">
       <a class="nav-link" th:href="@{/state/reportingPending}">
         <i class="fas fa-fw fa-user-clock"></i>

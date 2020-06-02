@@ -9,15 +9,14 @@
 
 <body id="page-top">
     <div id="wrapper">
-        <span th:replace="fragments/state_fragments :: side-navbar('reportingPending','')"></span>
+        <span th:replace="fragments/state_fragments :: side-navbar('allPassengers','')"></span>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <span th:replace="fragments/state_fragments :: top-navbar"></span>
                 <div class="container-fluid">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Passengers Reporting Pending at Screening
-                                Center</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">All Passengers</h6>
                         </div>
                         <div class="card-body">
                             <table id="myTable" class="table table-bordered table-responsive" width="100"
@@ -34,6 +33,7 @@
                                         <th>Address</th>
                                         <th>Pin</th>
                                         <th>Arrival</th>
+                                        <th>Screening Reported</th>
                                         <th>Time Since Arrival</th>
                                         <th>Action</th>
                                     </tr>
@@ -50,15 +50,8 @@
                                         <td th:text="${s.address}"></td>
                                         <td th:text="${s.pincode}"></td>
                                         <td th:text="${s.arrival_time}"></td>
+                                        <td th:text="${s.reporting_time}"></td>
                                         <td th:text="${s.timeDiff}"></td>
-                                        <td>
-                                            <!-- <form th:action="@{/state/updateStatus}" method="POST"
-                                                onsubmit="return doConfirm();">
-                                                <input type="hidden" name="token" th:value="${s.tokenNo}" />
-                                                <input type="submit" name="submit" value="Hide Permanently"
-                                                    class="btn btn-sm btn-primary" />
-                                            </form> -->
-                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -77,7 +70,9 @@
         $(document).ready(function () {
             $("#sidebarToggle").trigger('click');
 
-            $("#myTable").dataTable();
+            $("#myTable").dataTable({
+                "pageLength": 50
+            });
             function doConfirm() {
                 if ($.confirm({
                     title: 'Confirm',

@@ -28,19 +28,19 @@ public class DistrictService {
     @Autowired
     QrCodeDataRepo qrCodeRepo;
 
-    public List<PassengerDetails> getPendingPassengerList(UserDetails user) {
+    public List<PassengerDetails> getAllPassengerList(UserDetails user) {
         String district = userRepo.findByUsername(user.getUsername()).get().getUserScope().getDistrict()
                 .getDistrictName();
         List<PassengerDetails> passengerList = new ArrayList<>();
-        List<QrCodeData> qrList = qrCodeRepo.findAllByReachedScreeningCenterAndDestinationDistrictAndStatus(false,
-                district, "ACTIVE");
+        List<QrCodeData> qrList = qrCodeRepo.findAllByDestinationDistrictAndStatus(district, "ACTIVE");
 
-        Date dt = new Date();
         for (QrCodeData qr : qrList) {
             PassengerDetails passengerDetails = new PassengerDetails();
             List<QrcodeScanDetail> scanDetails = qr.getScanDetails();
             List<QrCodeMemberDetail> memList = qr.getMemberDetails();
             for (QrCodeMemberDetail mem : memList) {
+                Date dt = new Date();
+                Date dtA = new Date();
                 passengerDetails.setTokenNo(qr.getTokenId());
                 passengerDetails.setName(mem.getName());
                 passengerDetails.setPhone(mem.getMobileNumber());
@@ -52,13 +52,55 @@ public class DistrictService {
                 for (QrcodeScanDetail scanDetail : scanDetails) {
                     if (scanDetail.getScanLocation().isScreeningCenter() == false) {
                         passengerDetails.setArrival_time(sdf.format(scanDetail.getScanDateTime()));
+                        dtA = scanDetail.getScanDateTime();
                     }
                     if (scanDetail.getScanLocation().isScreeningCenter() == true) {
                         passengerDetails.setReporting_time(sdf.format(scanDetail.getScanDateTime()));
+                        dt = scanDetail.getScanDateTime();
                     }
-                    passengerDetails.setTimeDiff(
-                            DateUtil.friendlyTimeDiff(dt.getTime() - scanDetail.getScanDateTime().getTime()));
                 }
+                passengerDetails.setTimeDiff(DateUtil.friendlyTimeDiff(dt.getTime() - dtA.getTime()));
+                passengerList.add(passengerDetails);
+            }
+        }
+        return passengerList;
+    }
+
+    public List<PassengerDetails> getPendingPassengerList(UserDetails user) {
+        String district = userRepo.findByUsername(user.getUsername()).get().getUserScope().getDistrict()
+                .getDistrictName();
+        List<PassengerDetails> passengerList = new ArrayList<>();
+        List<QrCodeData> qrList = qrCodeRepo.findAllByReachedScreeningCenterAndDestinationDistrictAndStatus(false,
+                district, "ACTIVE");
+
+        // Date dt = new Date();
+        // Date dtA = new Date();
+        for (QrCodeData qr : qrList) {
+            PassengerDetails passengerDetails = new PassengerDetails();
+            List<QrcodeScanDetail> scanDetails = qr.getScanDetails();
+            List<QrCodeMemberDetail> memList = qr.getMemberDetails();
+            for (QrCodeMemberDetail mem : memList) {
+                Date dt = new Date();
+                Date dtA = new Date();
+                passengerDetails.setTokenNo(qr.getTokenId());
+                passengerDetails.setName(mem.getName());
+                passengerDetails.setPhone(mem.getMobileNumber());
+                passengerDetails.setDistrict(mem.getDistrict());
+                passengerDetails.setThana(mem.getThana());
+                passengerDetails.setPincode(mem.getPin());
+                passengerDetails.setAddress(mem.getAddress());
+                passengerDetails.setScreening_center(mem.getAssignedScreeningCenter());
+                for (QrcodeScanDetail scanDetail : scanDetails) {
+                    if (scanDetail.getScanLocation().isScreeningCenter() == false) {
+                        passengerDetails.setArrival_time(sdf.format(scanDetail.getScanDateTime()));
+                        dtA = scanDetail.getScanDateTime();
+                    }
+                    if (scanDetail.getScanLocation().isScreeningCenter() == true) {
+                        passengerDetails.setReporting_time(sdf.format(scanDetail.getScanDateTime()));
+                        dt = scanDetail.getScanDateTime();
+                    }
+                }
+                passengerDetails.setTimeDiff(DateUtil.friendlyTimeDiff(dt.getTime() - dtA.getTime()));
                 passengerList.add(passengerDetails);
             }
         }
@@ -72,12 +114,15 @@ public class DistrictService {
         List<QrCodeData> qrList = qrCodeRepo.findAllByReachedScreeningCenterAndDestinationDistrictAndStatus(true,
                 district, "ACTIVE");
 
-        Date dt = new Date();
+        // Date dt = new Date();
+        // Date dtA = new Date();
         for (QrCodeData qr : qrList) {
             PassengerDetails passengerDetails = new PassengerDetails();
             List<QrcodeScanDetail> scanDetails = qr.getScanDetails();
             List<QrCodeMemberDetail> memList = qr.getMemberDetails();
             for (QrCodeMemberDetail mem : memList) {
+                Date dt = new Date();
+                Date dtA = new Date();
                 passengerDetails.setTokenNo(qr.getTokenId());
                 passengerDetails.setName(mem.getName());
                 passengerDetails.setPhone(mem.getMobileNumber());
@@ -89,13 +134,14 @@ public class DistrictService {
                 for (QrcodeScanDetail scanDetail : scanDetails) {
                     if (scanDetail.getScanLocation().isScreeningCenter() == false) {
                         passengerDetails.setArrival_time(sdf.format(scanDetail.getScanDateTime()));
+                        dtA = scanDetail.getScanDateTime();
                     }
                     if (scanDetail.getScanLocation().isScreeningCenter() == true) {
                         passengerDetails.setReporting_time(sdf.format(scanDetail.getScanDateTime()));
+                        dt = scanDetail.getScanDateTime();
                     }
-                    passengerDetails.setTimeDiff(
-                            DateUtil.friendlyTimeDiff(dt.getTime() - scanDetail.getScanDateTime().getTime()));
                 }
+                passengerDetails.setTimeDiff(DateUtil.friendlyTimeDiff(dt.getTime() - dtA.getTime()));
                 passengerList.add(passengerDetails);
             }
         }

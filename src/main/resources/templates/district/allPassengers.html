@@ -2,22 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 
 <head>
-    <span th:replace="fragments/state_fragments :: head('e-TravelPermit')">
+    <span th:replace="fragments/district_fragments :: head('e-TravelPermit')">
     </span>
-    <span th:replace="fragments/state_fragments :: common-css"></span>
+    <span th:replace="fragments/district_fragments :: common-css"></span>
 </head>
 
 <body id="page-top">
     <div id="wrapper">
-        <span th:replace="fragments/state_fragments :: side-navbar('reportingPending','')"></span>
+        <span th:replace="fragments/district_fragments :: side-navbar('allPassengers','')"></span>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <span th:replace="fragments/state_fragments :: top-navbar"></span>
+                <span th:replace="fragments/district_fragments :: top-navbar"></span>
                 <div class="container-fluid">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Passengers Reporting Pending at Screening
-                                Center</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">All Passengers List</h6>
                         </div>
                         <div class="card-body">
                             <table id="myTable" class="table table-bordered table-responsive" width="100"
@@ -34,6 +33,7 @@
                                         <th>Address</th>
                                         <th>Pin</th>
                                         <th>Arrival</th>
+                                        <th>Screening Reported</th>
                                         <th>Time Since Arrival</th>
                                         <th>Action</th>
                                     </tr>
@@ -50,34 +50,34 @@
                                         <td th:text="${s.address}"></td>
                                         <td th:text="${s.pincode}"></td>
                                         <td th:text="${s.arrival_time}"></td>
+                                        <td th:text="${s.reporting_time}"></td>
                                         <td th:text="${s.timeDiff}"></td>
                                         <td>
-                                            <!-- <form th:action="@{/state/updateStatus}" method="POST"
+                                            <form th:action="@{/district/updateStatus}" method="POST"
                                                 onsubmit="return doConfirm();">
                                                 <input type="hidden" name="token" th:value="${s.tokenNo}" />
                                                 <input type="submit" name="submit" value="Hide Permanently"
                                                     class="btn btn-sm btn-primary" />
-                                            </form> -->
+                                            </form>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
                 </div>
             </div>
-            <span th:replace="fragments/state_fragments :: footer"></span>
+            <span th:replace="fragments/district_fragments :: footer"></span>
         </div>
     </div>
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-    <span th:replace="fragments/state_fragments :: common-js('')"></span>
+    <span th:replace="fragments/district_fragments :: common-js('')"></span>
     <script>
         $(document).ready(function () {
             $("#sidebarToggle").trigger('click');
-
-            $("#myTable").dataTable();
             function doConfirm() {
                 if ($.confirm({
                     title: 'Confirm',

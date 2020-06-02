@@ -23,6 +23,14 @@ public class DistrictController {
         return mv;
     }
 
+    @GetMapping(value = { "/allPassengers" })
+    public ModelAndView allPassengers(ModelAndView mv) {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        mv = new ModelAndView("district/allPassengers");
+        mv.addObject("passengerList", districtService.getAllPassengerList(user));
+        return mv;
+    }
+
     @GetMapping(value = { "/reportingPending" })
     public ModelAndView reportingPending(ModelAndView mv) {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

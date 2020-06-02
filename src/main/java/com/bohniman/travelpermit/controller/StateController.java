@@ -18,6 +18,7 @@ public class StateController {
     @GetMapping(value = { "/home" })
     public ModelAndView noRole(ModelAndView mv) {
         mv = new ModelAndView("state/index");
+        mv.addObject("dashboardList", stateService.getDistrictDashbord());
         return mv;
     }
 
@@ -36,6 +37,15 @@ public class StateController {
         // SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mv = new ModelAndView("state/reported");
         mv.addObject("passengerList", stateService.getReportedPassengerList());
+        return mv;
+    }
+
+    @GetMapping(value = { "/allPassengers" })
+    public ModelAndView allPassengers(ModelAndView mv) {
+        // UserDetails user = (UserDetails)
+        // SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        mv = new ModelAndView("state/allPassengers");
+        mv.addObject("passengerList", stateService.getAllPassengerList());
         return mv;
     }
 
