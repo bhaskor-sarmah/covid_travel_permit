@@ -183,6 +183,7 @@ public class DeoService {
                     members.add(qrCodeMemberDetail);
                     qrCodeData.setMemberDetails(members);
                     qrCodeData.setFlightDateTime(qrCodePayload.getReportingTimeAtAirport());
+                    qrCodeData.setDestinationDistrict(qrCodePayload.getDistrict());
 
                     qrCodeDataRepo.save(qrCodeData);
 
