@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.bohniman.travelpermit.model.QrCodeData;
+import com.bohniman.travelpermit.payload.MasterTable;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -37,22 +38,25 @@ public interface QrCodeDataRepo extends JpaRepository<QrCodeData, Long> {
         // QrCodeData findTopByStatusAndEntryStatusIsNullOrderByTokenIdAsc(String
         // string);
 
-        @Query(value = "SELECT COUNT(*) FROM (SELECT * FROM (SELECT a.token_id,a.reached_screening_center,SUBSTRING_INDEX(b.scan_date_time,\" \",1) AS `date`,SUBSTRING_INDEX(b.scan_date_time,\" \",-1) AS `time`,e.name,e.mobile_number,e.district "
-                        + "FROM qrcode_data a,qrcode_scan_detail b,qrcode_data_qrcode_member_detail_mapping c,qrcode_data_qrcode_scan_detail_mapping d,qrcode_member_detail e "
-                        + "WHERE a.id = d.qrcode_data_id AND b.id = d.qrcode_scan_detail_id AND a.id = c.qrcode_data_id AND e.id = c.qrcode_member_detail_id) main_table "
+        @Query(value = "SELECT COUNT(*) FROM ( " + "SELECT * FROM ( "
+                        + "SELECT a.token_id,a.reached_screening_center,e.name,e.mobile_number,e.district FROM qrcode_data a, "
+                        + "qrcode_data_qrcode_member_detail_mapping c,qrcode_member_detail e WHERE a.id = c.qrcode_data_id AND "
+                        + "e.id = c.qrcode_member_detail_id) main_table "
                         + "WHERE main_table.district = ?1 GROUP BY main_table.token_id) second_table;", nativeQuery = true)
         Long getDistrictWiseTotalCount(String district);
 
-        @Query(value = "SELECT COUNT(*) FROM (SELECT * FROM (SELECT a.token_id,a.reached_screening_center,SUBSTRING_INDEX(b.scan_date_time,\" \",1) AS `date`,SUBSTRING_INDEX(b.scan_date_time,\" \",-1) AS `time`,e.name,e.mobile_number,e.district "
-                        + "FROM qrcode_data a,qrcode_scan_detail b,qrcode_data_qrcode_member_detail_mapping c,qrcode_data_qrcode_scan_detail_mapping d,qrcode_member_detail e "
-                        + "WHERE a.id = d.qrcode_data_id AND b.id = d.qrcode_scan_detail_id AND a.id = c.qrcode_data_id AND e.id = c.qrcode_member_detail_id) main_table "
+        @Query(value = "SELECT COUNT(*) FROM ( " + "SELECT * FROM ( "
+                        + "SELECT a.token_id,a.reached_screening_center,e.name,e.mobile_number,e.district FROM qrcode_data a, "
+                        + "qrcode_data_qrcode_member_detail_mapping c,qrcode_member_detail e WHERE a.id = c.qrcode_data_id AND "
+                        + "e.id = c.qrcode_member_detail_id) main_table "
                         + "WHERE main_table.district = ?1 AND main_table.reached_screening_center = 1 GROUP BY main_table.token_id) second_table;", nativeQuery = true)
         Long getDistrictWiseScreenedTotalCount(String district);
 
-        @Query(value = "SELECT COUNT(*) FROM (SELECT * FROM (SELECT a.token_id,a.reached_screening_center,SUBSTRING_INDEX(b.scan_date_time,\" \",1) AS `date`,SUBSTRING_INDEX(b.scan_date_time,\" \",-1) AS `time`,e.name,e.mobile_number,e.district "
-                        + "FROM qrcode_data a,qrcode_scan_detail b,qrcode_data_qrcode_member_detail_mapping c,qrcode_data_qrcode_scan_detail_mapping d,qrcode_member_detail e "
-                        + "WHERE a.id = d.qrcode_data_id AND b.id = d.qrcode_scan_detail_id AND a.id = c.qrcode_data_id AND e.id = c.qrcode_member_detail_id) main_table "
-                        + "WHERE main_table.district = ?1 AND main_table.reached_screening_center = 0 GROUP BY main_table.token_id) second_table;", nativeQuery = true)
+        @Query(value = "SELECT COUNT(*) FROM ( " + "SELECT * FROM ( "
+                        + "SELECT a.token_id,a.reached_screening_center,e.name,e.mobile_number,e.district FROM qrcode_data a, "
+                        + "qrcode_data_qrcode_member_detail_mapping c,qrcode_member_detail e WHERE a.id = c.qrcode_data_id AND "
+                        + "e.id = c.qrcode_member_detail_id) main_table "
+                        + "WHERE main_table.district = ?1 AND main_table.reached_screening_center = 1 GROUP BY main_table.token_id) second_table;", nativeQuery = true)
         Long getDistrictWiseNotScreenedTotalCount(String district);
 
         List<QrCodeData> findAllByStatus(String string);
@@ -71,5 +75,14 @@ public interface QrCodeDataRepo extends JpaRepository<QrCodeData, Long> {
                         + "        and qrcodedata0_.status=?3", nativeQuery = true)
         List<QrCodeData> findAllByScanDetails_scanDateTimeAndDestinationDistrictAndStatus(String date, String district,
                         String string);
+
+        @Query(value = "SELECT qrcode_id,reached_screening_center,token_id,destination_district,name,mobile_number,pin,thana,address,assigned_screening_center,entry_status,username,entry_date,entry_time FROM master_table WHERE entry_status = ?1 AND entry_date = ?2", nativeQuery = true)
+        List<Object[]> findAllByDate(String status, String date);
+
+        @Query(value = "SELECT qrcode_id,reached_screening_center,token_id,destination_district,name,mobile_number,pin,thana,address,assigned_screening_center,entry_status,username,entry_date,entry_time FROM master_table WHERE entry_status = ?1 AND entry_date = ?2 AND reached_screening_center = 0", nativeQuery = true)
+        List<Object[]> findAllPendingByDate(String status, String date);
+
+        @Query(value = "SELECT qrcode_id,reached_screening_center,token_id,destination_district,name,mobile_number,pin,thana,address,assigned_screening_center,entry_status,username,entry_date,entry_time FROM master_table WHERE entry_status = ?1 AND entry_date = ?2 AND reached_screening_center = 1", nativeQuery = true)
+        List<Object[]> findAllArrivedByDate(String status, String date);
 
 }

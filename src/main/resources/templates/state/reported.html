@@ -20,6 +20,25 @@
                                 Center</h6>
                         </div>
                         <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <form th:action="@{/state/reportedPassengers}" method="POST"
+                                        onsubmit="return doCheckDate();" autocomplete="off">
+                                        <div class="col-6">
+                                            <div class="input-group mb-3">
+                                                <label>Select Date : </label>&nbsp;&nbsp;
+                                                <input type="text" name="date" id="date" class="form-control"
+                                                    placeholder="YYYY/MM/DD" aria-label=""
+                                                    aria-describedby="basic-addon1">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="submit" name="submit"
+                                                        id="submit">View Report</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             <table id="myTable" class="table table-bordered table-responsive" width="100"
                                 style="width: 100%;">
                                 <thead>
@@ -30,35 +49,28 @@
                                         <th>Name</th>
                                         <th>Mobile</th>
                                         <th>District</th>
-                                        <th>Thana</th>
+                                        <!-- <th>Thana</th>
                                         <th>Address</th>
-                                        <th>Pin</th>
-                                        <th>Arrival</th>
-                                        <th>Screening Reported</th>
-                                        <th>Action</th>
+                                        <th>Pin</th> -->
+                                        <th style="width:100px;">Data Entry Date</th>
+                                        <th style="width:100px;">Data Entry Time</th>
+                                        <th>Data Entry By</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="s,iterator : ${passengerList}">
                                         <td th:text="${iterator.index+1}"></td>
-                                        <td th:text="${s.tokenNo}"></td>
-                                        <td th:text="${s.screening_center}"></td>
+                                        <td th:text="${s.tokenId}"></td>
+                                        <td th:text="${s.assignedScreeningCenter}"></td>
                                         <td th:text="${s.name}"></td>
-                                        <td th:text="${s.phone}"></td>
-                                        <td th:text="${s.district}"></td>
-                                        <td th:text="${s.thana}"></td>
+                                        <td th:text="${s.mobileNumber}"></td>
+                                        <td th:text="${s.destinationDistrict}"></td>
+                                        <!-- <td th:text="${s.thana}"></td>
                                         <td th:text="${s.address}"></td>
-                                        <td th:text="${s.pincode}"></td>
-                                        <td th:text="${s.arrival_time}"></td>
-                                        <td th:text="${s.reporting_time}"></td>
-                                        <td>
-                                            <!-- <form th:action="@{/state/updateStatus}" method="POST"
-                                                onsubmit="return doConfirm();">
-                                                <input type="hidden" name="token" th:value="${s.tokenNo}" />
-                                                <input type="submit" name="submit" value="Hide Permanently"
-                                                    class="btn btn-sm btn-primary" />
-                                            </form> -->
-                                        </td>
+                                        <td th:text="${s.pin}"></td> -->
+                                        <td th:text="${s.entryDate}"></td>
+                                        <td th:text="${s.entryTime}"></td>
+                                        <td th:text="${s.username}"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -79,6 +91,12 @@
             $("#sidebarToggle").trigger('click');
 
             $("#myTable").dataTable();
+            $("#date").datepicker({
+                maxDate: '+0d',
+                dateFormat: 'yy-mm-dd',
+                changeYear: false,
+                changeMonth: false
+            });
             function doConfirm() {
                 if ($.confirm({
                     title: 'Confirm',

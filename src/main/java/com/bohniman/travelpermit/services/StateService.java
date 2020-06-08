@@ -10,6 +10,7 @@ import com.bohniman.travelpermit.model.QrCodeData;
 import com.bohniman.travelpermit.model.QrCodeMemberDetail;
 import com.bohniman.travelpermit.model.QrcodeScanDetail;
 import com.bohniman.travelpermit.payload.DistrictDashboard;
+import com.bohniman.travelpermit.payload.MasterTable;
 import com.bohniman.travelpermit.payload.PassengerDetails;
 import com.bohniman.travelpermit.repository.DistrictRepo;
 import com.bohniman.travelpermit.repository.QrCodeDataRepo;
@@ -29,125 +30,79 @@ public class StateService {
     @Autowired
     QrCodeDataRepo qrCodeRepo;
 
-    public List<PassengerDetails> getAllPassengerList() {
-        // String district =
-        // userRepo.findByUsername(user.getUsername()).get().getUserScope().getDistrict()
-        // .getDistrictName();
-        List<PassengerDetails> passengerList = new ArrayList<>();
-        List<QrCodeData> qrList = qrCodeRepo.findAllByStatus("ACTIVE");
-
-        Date dt = new Date();
-        Date dtA = new Date();
-        for (QrCodeData qr : qrList) {
-            PassengerDetails passengerDetails = new PassengerDetails();
-            List<QrcodeScanDetail> scanDetails = qr.getScanDetails();
-            List<QrCodeMemberDetail> memList = qr.getMemberDetails();
-            for (QrCodeMemberDetail mem : memList) {
-                passengerDetails.setTokenNo(qr.getTokenId());
-                passengerDetails.setName(mem.getName());
-                passengerDetails.setPhone(mem.getMobileNumber());
-                passengerDetails.setDistrict(mem.getDistrict());
-                passengerDetails.setThana(mem.getThana());
-                passengerDetails.setPincode(mem.getPin());
-                passengerDetails.setAddress(mem.getAddress());
-                passengerDetails.setScreening_center(mem.getAssignedScreeningCenter());
-                for (QrcodeScanDetail scanDetail : scanDetails) {
-                    if (scanDetail.getScanLocation().isScreeningCenter() == false) {
-                        passengerDetails.setArrival_time(sdf.format(scanDetail.getScanDateTime()));
-                        dtA = scanDetail.getScanDateTime();
-                    }
-                    if (scanDetail.getScanLocation().isScreeningCenter() == true) {
-                        passengerDetails.setReporting_time(sdf.format(scanDetail.getScanDateTime()));
-                        dt = scanDetail.getScanDateTime();
-                    }
-                }
-                passengerDetails.setTimeDiff(DateUtil.friendlyTimeDiff(dt.getTime() - dtA.getTime()));
-                passengerList.add(passengerDetails);
-            }
+    public List<MasterTable> getAllPassengerList(String date) {
+        List<Object[]> objList = qrCodeRepo.findAllByDate("COMPLETED", date);
+        List<MasterTable> mList = new ArrayList<>();
+        for (Object[] obj : objList) {
+            int i = 0;
+            MasterTable master = new MasterTable();
+            master.setQrcodeId(String.valueOf(obj[i++]));
+            master.setReachedScreeningCenter(((Boolean) obj[i++]) ? "1" : "0");
+            master.setTokenId((String) obj[i++]);
+            master.setDestinationDistrict((String) obj[i++]);
+            master.setName((String) obj[i++]);
+            master.setMobileNumber((String) obj[i++]);
+            master.setPin((String) obj[i++]);
+            master.setThana((String) obj[i++]);
+            master.setAddress((String) obj[i++]);
+            master.setAssignedScreeningCenter((String) obj[i++]);
+            master.setEntryStatus((String) obj[i++]);
+            master.setUsername((String) obj[i++]);
+            master.setEntryDate((String) obj[i++]);
+            master.setEntryTime((String) obj[i++]);
+            mList.add(master);
         }
-        return passengerList;
+        return mList;
     }
 
-    public List<PassengerDetails> getPendingPassengerList() {
-        // String district =
-        // userRepo.findByUsername(user.getUsername()).get().getUserScope().getDistrict()
-        // .getDistrictName();
-        List<PassengerDetails> passengerList = new ArrayList<>();
-        List<QrCodeData> qrList = qrCodeRepo.findAllByReachedScreeningCenterAndStatus(false, "ACTIVE");
-
-        // Date dt = new Date();
-        // Date dtA = new Date();
-        for (QrCodeData qr : qrList) {
-            PassengerDetails passengerDetails = new PassengerDetails();
-            List<QrcodeScanDetail> scanDetails = qr.getScanDetails();
-            List<QrCodeMemberDetail> memList = qr.getMemberDetails();
-            for (QrCodeMemberDetail mem : memList) {
-                Date dt = new Date();
-                Date dtA = new Date();
-                passengerDetails.setTokenNo(qr.getTokenId());
-                passengerDetails.setName(mem.getName());
-                passengerDetails.setPhone(mem.getMobileNumber());
-                passengerDetails.setDistrict(mem.getDistrict());
-                passengerDetails.setThana(mem.getThana());
-                passengerDetails.setPincode(mem.getPin());
-                passengerDetails.setAddress(mem.getAddress());
-                passengerDetails.setScreening_center(mem.getAssignedScreeningCenter());
-                for (QrcodeScanDetail scanDetail : scanDetails) {
-                    if (scanDetail.getScanLocation().isScreeningCenter() == false) {
-                        passengerDetails.setArrival_time(sdf.format(scanDetail.getScanDateTime()));
-                        dtA = scanDetail.getScanDateTime();
-                    }
-                    if (scanDetail.getScanLocation().isScreeningCenter() == true) {
-                        passengerDetails.setReporting_time(sdf.format(scanDetail.getScanDateTime()));
-                        dt = scanDetail.getScanDateTime();
-                    }
-                }
-                passengerDetails.setTimeDiff(DateUtil.friendlyTimeDiff(dt.getTime() - dtA.getTime()));
-                passengerList.add(passengerDetails);
-            }
+    public List<MasterTable> getPendingPassengerList(String date) {
+        List<Object[]> objList = qrCodeRepo.findAllPendingByDate("COMPLETED", date);
+        List<MasterTable> mList = new ArrayList<>();
+        for (Object[] obj : objList) {
+            int i = 0;
+            MasterTable master = new MasterTable();
+            master.setQrcodeId(String.valueOf(obj[i++]));
+            master.setReachedScreeningCenter(((Boolean) obj[i++]) ? "1" : "0");
+            master.setTokenId((String) obj[i++]);
+            master.setDestinationDistrict((String) obj[i++]);
+            master.setName((String) obj[i++]);
+            master.setMobileNumber((String) obj[i++]);
+            master.setPin((String) obj[i++]);
+            master.setThana((String) obj[i++]);
+            master.setAddress((String) obj[i++]);
+            master.setAssignedScreeningCenter((String) obj[i++]);
+            master.setEntryStatus((String) obj[i++]);
+            master.setUsername((String) obj[i++]);
+            master.setEntryDate((String) obj[i++]);
+            master.setEntryTime((String) obj[i++]);
+            mList.add(master);
         }
-        return passengerList;
+        return mList;
     }
 
-    public List<PassengerDetails> getReportedPassengerList() {
-        // String district =
-        // userRepo.findByUsername(user.getUsername()).get().getUserScope().getDistrict()
-        // .getDistrictName();
-        List<PassengerDetails> passengerList = new ArrayList<>();
-        List<QrCodeData> qrList = qrCodeRepo.findAllByReachedScreeningCenterAndStatus(true, "ACTIVE");
-
-        // Date dt = new Date();
-        // Date dtA = new Date();
-        for (QrCodeData qr : qrList) {
-            PassengerDetails passengerDetails = new PassengerDetails();
-            List<QrcodeScanDetail> scanDetails = qr.getScanDetails();
-            List<QrCodeMemberDetail> memList = qr.getMemberDetails();
-            for (QrCodeMemberDetail mem : memList) {
-                Date dt = new Date();
-                Date dtA = new Date();
-                passengerDetails.setTokenNo(qr.getTokenId());
-                passengerDetails.setName(mem.getName());
-                passengerDetails.setPhone(mem.getMobileNumber());
-                passengerDetails.setDistrict(mem.getDistrict());
-                passengerDetails.setThana(mem.getThana());
-                passengerDetails.setPincode(mem.getPin());
-                passengerDetails.setAddress(mem.getAddress());
-                passengerDetails.setScreening_center(mem.getAssignedScreeningCenter());
-                for (QrcodeScanDetail scanDetail : scanDetails) {
-                    if (scanDetail.getScanLocation().isScreeningCenter() == false) {
-                        passengerDetails.setArrival_time(sdf.format(scanDetail.getScanDateTime()));
-                        dtA = scanDetail.getScanDateTime();
-                    }
-                    if (scanDetail.getScanLocation().isScreeningCenter() == true) {
-                        passengerDetails.setReporting_time(sdf.format(scanDetail.getScanDateTime()));
-                        dt = scanDetail.getScanDateTime();
-                    }
-                }
-                passengerDetails.setTimeDiff(DateUtil.friendlyTimeDiff(dt.getTime() - dtA.getTime()));
-                passengerList.add(passengerDetails);
-            }
+    public List<MasterTable> getReportedPassengerList(String date) {
+        List<Object[]> objList = qrCodeRepo.findAllArrivedByDate("COMPLETED", date);
+        List<MasterTable> mList = new ArrayList<>();
+        for (Object[] obj : objList) {
+            int i = 0;
+            MasterTable master = new MasterTable();
+            master.setQrcodeId(String.valueOf(obj[i++]));
+            master.setReachedScreeningCenter(((Boolean) obj[i++]) ? "1" : "0");
+            master.setTokenId((String) obj[i++]);
+            master.setDestinationDistrict((String) obj[i++]);
+            master.setName((String) obj[i++]);
+            master.setMobileNumber((String) obj[i++]);
+            master.setPin((String) obj[i++]);
+            master.setThana((String) obj[i++]);
+            master.setAddress((String) obj[i++]);
+            master.setAssignedScreeningCenter((String) obj[i++]);
+            master.setEntryStatus((String) obj[i++]);
+            master.setUsername((String) obj[i++]);
+            master.setEntryDate((String) obj[i++]);
+            master.setEntryTime((String) obj[i++]);
+            mList.add(master);
         }
-        return passengerList;
+        return mList;
     }
 
     public List<DistrictDashboard> getDistrictDashbord() {
