@@ -34,7 +34,6 @@
                                         <th>Address</th>
                                         <th>Pin</th>
                                         <th>Arrival</th>
-                                        <th>Time Since Arrival</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -50,7 +49,6 @@
                                         <td th:text="${s.address}"></td>
                                         <td th:text="${s.pincode}"></td>
                                         <td th:text="${s.arrival_time}"></td>
-                                        <td th:text="${s.timeDiff}"></td>
                                         <td>
                                             <form th:action="@{/district/updateStatus}" method="POST"
                                                 onsubmit="return doConfirm();">

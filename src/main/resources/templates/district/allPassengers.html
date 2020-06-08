@@ -19,6 +19,19 @@
                             <h6 class="m-0 font-weight-bold text-primary">All Passengers List</h6>
                         </div>
                         <div class="card-body">
+                            <div class="row">
+                                <form th:action="@{/district/allPassengers}" method="POST"
+                                    onsubmit="return doCheckDate();">
+                                    <div class="col-3">
+                                        <label>Select Date : </label>
+                                        <input type="text" name="date" id="date" class="form-control" />
+                                    </div>
+                                    <div class="col-9">
+                                        <input type="submit" name="submit" id="submit" class="btn btn-primary"
+                                            value="View Report" />
+                                    </div>
+                                </form>
+                            </div>
                             <table id="myTable" class="table table-bordered table-responsive" width="100"
                                 style="width: 100%;">
                                 <thead>
@@ -34,7 +47,6 @@
                                         <th>Pin</th>
                                         <th>Arrival</th>
                                         <th>Screening Reported</th>
-                                        <th>Time Since Arrival</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -51,7 +63,6 @@
                                         <td th:text="${s.pincode}"></td>
                                         <td th:text="${s.arrival_time}"></td>
                                         <td th:text="${s.reporting_time}"></td>
-                                        <td th:text="${s.timeDiff}"></td>
                                         <td>
                                             <form th:action="@{/district/updateStatus}" method="POST"
                                                 onsubmit="return doConfirm();">
@@ -78,6 +89,25 @@
     <script>
         $(document).ready(function () {
             $("#sidebarToggle").trigger('click');
+            //Initialise datepicker
+            $("#date").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                minDate: 0,
+                dateFormat: 'yy-mm-dd'
+            });
+            function doCheckDate() {
+                if ($("#date").val() == "") {
+                    $.alert({
+                        title: 'Error',
+                        content: 'Please select a date.',
+                        type: 'red',
+                        typeAnimated: true
+                    });
+                    return false;
+                }
+                return true;
+            }
             function doConfirm() {
                 if ($.confirm({
                     title: 'Confirm',

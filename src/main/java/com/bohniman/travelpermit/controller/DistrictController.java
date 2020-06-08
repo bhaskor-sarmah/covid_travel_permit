@@ -27,7 +27,7 @@ public class DistrictController {
     public ModelAndView allPassengers(ModelAndView mv) {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mv = new ModelAndView("district/allPassengers");
-        mv.addObject("passengerList", districtService.getAllPassengerList(user));
+        mv.addObject("passengerList", districtService.getAllPassengerList(user, null));
         return mv;
     }
 

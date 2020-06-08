@@ -28,11 +28,17 @@ public class DistrictService {
     @Autowired
     QrCodeDataRepo qrCodeRepo;
 
-    public List<PassengerDetails> getAllPassengerList(UserDetails user) {
+    public List<PassengerDetails> getAllPassengerList(UserDetails user, Date date) {
+        if (date == null) {
+            date = new Date();
+        }
+        SimpleDateFormat ss = new SimpleDateFormat("yyyy-MM-dd");
+        String dxt = ss.format(date);
         String district = userRepo.findByUsername(user.getUsername()).get().getUserScope().getDistrict()
                 .getDistrictName();
         List<PassengerDetails> passengerList = new ArrayList<>();
-        List<QrCodeData> qrList = qrCodeRepo.findAllByDestinationDistrictAndStatus(district, "ACTIVE");
+        List<QrCodeData> qrList = qrCodeRepo.findAllByScanDetails_scanDateTimeAndDestinationDistrictAndStatus(dxt,
+                district, "ACTIVE");
 
         for (QrCodeData qr : qrList) {
             PassengerDetails passengerDetails = new PassengerDetails();
