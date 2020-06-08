@@ -12,4 +12,6 @@ public interface DistrictRepo extends JpaRepository<District, Long> {
 
     List<District> findAllByOrderByDistrict();
 
+    District findByDistrict(String districtName);
+
 }

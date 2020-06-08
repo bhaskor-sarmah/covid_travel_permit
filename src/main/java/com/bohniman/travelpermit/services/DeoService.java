@@ -142,6 +142,7 @@ public class DeoService {
                 qrCodeData.setDestinationDistrict(qrCodePayload.getDistrict());
                 qrCodeData.setTokenId(qrCodePayload.getTokenId());
                 qrCodeData.setStatus("ACTIVE");
+                qrCodeData.setFlightDateTime(qrCodePayload.getReportingTimeAtAirport());
 
                 qrCodeDataRepo.save(qrCodeData);
 
@@ -181,6 +182,8 @@ public class DeoService {
                     List<QrCodeMemberDetail> members = new ArrayList<>();
                     members.add(qrCodeMemberDetail);
                     qrCodeData.setMemberDetails(members);
+                    qrCodeData.setFlightDateTime(qrCodePayload.getReportingTimeAtAirport());
+                    qrCodeData.setDestinationDistrict(qrCodePayload.getDistrict());
 
                     qrCodeDataRepo.save(qrCodeData);
 
@@ -245,7 +248,7 @@ public class DeoService {
                 clickedData.setEntryStatus(AppStaticData.ENTRY_STATUS_DUPLICATE);
                 clickedDataRepository.save(clickedData);
 
-                result.put(AppStaticData.ENTRY_STATUS_COMPLETED, "Data saved successfully. Please try again.");
+                result.put(AppStaticData.ENTRY_STATUS_COMPLETED, "Data saved successfully. Next token number loaded.");
             } else {
 
                 result.put(AppStaticData.ENTRY_STATUS_ERROR, "Invalid data. Please try again.");
@@ -259,6 +262,16 @@ public class DeoService {
 
     public Optional<Document> getDocumentId(Long documentId) {
         return documentRepository.findById(documentId);
+    }
+
+    public List<ScanLocation> getSanLocations(String districtName) {
+        District district = districtRepo.findByDistrict(districtName);
+        if (!Objects.equals(district, null)) {
+            List<ScanLocation> scanLocations = district.getScanLocations();
+            return scanLocations;
+        } else {
+            return null;
+        }
     }
 
 }

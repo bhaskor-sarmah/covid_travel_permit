@@ -29,7 +29,7 @@ public interface QrCodeDataRepo extends JpaRepository<QrCodeData, Long> {
 
         QrCodeData findTopByOrderByTokenIdAsc();
 
-        QrCodeData findTopByStatusOrderByTokenIdAsc(String string);
+        // QrCodeData findTopByStatusOrderByTokenIdAsc(String string);
 
         // QrCodeData findTopByStatusAndEntryStatusNotOrderByTokenIdAsc(String string,
         // String string2);
