@@ -29,7 +29,7 @@ public class StateService {
     QrcodeScanDetailRepo qrcodeScanDetailRepo;
 
     public List<MasterTable> getAllPassengerList(String date) {
-        List<Object[]> objList = qrCodeRepo.findAllByDate("COMPLETED", date);
+        List<Object[]> objList = qrCodeRepo.findAllByDate(date);
         List<MasterTable> mList = new ArrayList<>();
         for (Object[] obj : objList) {
             int i = 0;
@@ -59,7 +59,7 @@ public class StateService {
     }
 
     public List<MasterTable> getPendingPassengerList(String date) {
-        List<Object[]> objList = qrCodeRepo.findAllPendingByDate("COMPLETED", date);
+        List<Object[]> objList = qrCodeRepo.findAllPendingByDate(date);
         List<MasterTable> mList = new ArrayList<>();
         for (Object[] obj : objList) {
             int i = 0;
@@ -84,7 +84,7 @@ public class StateService {
     }
 
     public List<MasterTable> getReportedPassengerList(String date) {
-        List<Object[]> objList = qrCodeRepo.findAllArrivedByDate("COMPLETED", date);
+        List<Object[]> objList = qrCodeRepo.findAllArrivedByDate(date);
         List<MasterTable> mList = new ArrayList<>();
         for (Object[] obj : objList) {
             int i = 0;

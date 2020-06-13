@@ -36,7 +36,7 @@ public class DistrictService {
     public List<MasterTable> getAllPassengerList(String date, UserDetails user) {
         String district = userRepo.findByUsername(user.getUsername()).get().getUserScope().getDistrict()
                 .getDistrictName();
-        List<Object[]> objList = qrCodeRepo.findAllByDateAndDistrict("COMPLETED", date, district);
+        List<Object[]> objList = qrCodeRepo.findAllByDateAndDistrict(date, district);
         List<MasterTable> mList = new ArrayList<>();
         for (Object[] obj : objList) {
             int i = 0;
@@ -68,7 +68,7 @@ public class DistrictService {
     public List<MasterTable> getPendingPassengerList(String date, UserDetails user) {
         String district = userRepo.findByUsername(user.getUsername()).get().getUserScope().getDistrict()
                 .getDistrictName();
-        List<Object[]> objList = qrCodeRepo.findAllPendingByDateAndDistrict("COMPLETED", date, district);
+        List<Object[]> objList = qrCodeRepo.findAllPendingByDateAndDistrict(date, district);
         List<MasterTable> mList = new ArrayList<>();
         for (Object[] obj : objList) {
             int i = 0;
@@ -95,7 +95,7 @@ public class DistrictService {
     public List<MasterTable> getReportedPassengerList(String date, UserDetails user) {
         String district = userRepo.findByUsername(user.getUsername()).get().getUserScope().getDistrict()
                 .getDistrictName();
-        List<Object[]> objList = qrCodeRepo.findAllArrivedByDateAndDistrict("COMPLETED", date, district);
+        List<Object[]> objList = qrCodeRepo.findAllArrivedByDateAndDistrict(date, district);
         List<MasterTable> mList = new ArrayList<>();
         for (Object[] obj : objList) {
             int i = 0;
