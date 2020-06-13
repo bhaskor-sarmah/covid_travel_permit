@@ -17,36 +17,36 @@ import org.springframework.stereotype.Service;
 @Service
 public class PasswordGenerator {
 
-    @Autowired
-    BCryptPasswordEncoder encoder;
+    // @Autowired
+    // BCryptPasswordEncoder encoder;
 
-    @Autowired
-    DistrictPassRepository passRepository;
+    // @Autowired
+    // DistrictPassRepository passRepository;
 
-    @Autowired
-    MasterDistrictRepository districtRepository;
+    // @Autowired
+    // MasterDistrictRepository districtRepository;
 
-    public void generatePassword() {
+    // public void generatePassword() {
 
-        List<MasterDistrict> districts = districtRepository
-                .findAllByState_stateCodeOrderByDistrictNameAsc(AppStaticData.STATE_CODE);
+    // List<MasterDistrict> districts = districtRepository
+    // .findAllByState_stateCodeOrderByDistrictNameAsc(AppStaticData.STATE_CODE);
 
-        List<DistrictPass> districtPasses = new ArrayList<>();
-        DistrictPass districtPass;
+    // List<DistrictPass> districtPasses = new ArrayList<>();
+    // DistrictPass districtPass;
 
-        for (MasterDistrict district : districts) {
-            districtPass = new DistrictPass();
-            String distName = district.getDistrictName();
-            String passString = RandomString.randomAlphaNumeric(5);
-            String passEncode = encoder.encode(passString);
-            districtPass.setDistName(distName);
-            districtPass.setPassString(passString);
-            districtPass.setPassEncode(passEncode);
-            districtPasses.add(districtPass);
+    // for (MasterDistrict district : districts) {
+    // districtPass = new DistrictPass();
+    // String distName = district.getDistrictName();
+    // String passString = RandomString.randomAlphaNumeric(5);
+    // String passEncode = encoder.encode(passString);
+    // districtPass.setDistName(distName);
+    // districtPass.setPassString(passString);
+    // districtPass.setPassEncode(passEncode);
+    // districtPasses.add(districtPass);
 
-        }
-        passRepository.saveAll(districtPasses);
+    // }
+    // passRepository.saveAll(districtPasses);
 
-    }
+    // }
 
 }

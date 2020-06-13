@@ -2,19 +2,14 @@ package com.bohniman.travelpermit.services;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.bohniman.travelpermit.model.District;
-import com.bohniman.travelpermit.model.QrCodeData;
-import com.bohniman.travelpermit.model.QrCodeMemberDetail;
-import com.bohniman.travelpermit.model.QrcodeScanDetail;
 import com.bohniman.travelpermit.payload.DistrictDashboard;
 import com.bohniman.travelpermit.payload.MasterTable;
-import com.bohniman.travelpermit.payload.PassengerDetails;
 import com.bohniman.travelpermit.repository.DistrictRepo;
 import com.bohniman.travelpermit.repository.QrCodeDataRepo;
-import com.bohniman.travelpermit.utils.DateUtil;
+import com.bohniman.travelpermit.repository.QrcodeScanDetailRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +24,9 @@ public class StateService {
 
     @Autowired
     QrCodeDataRepo qrCodeRepo;
+
+    @Autowired
+    QrcodeScanDetailRepo qrcodeScanDetailRepo;
 
     public List<MasterTable> getAllPassengerList(String date) {
         List<Object[]> objList = qrCodeRepo.findAllByDate("COMPLETED", date);
@@ -50,6 +48,11 @@ public class StateService {
             master.setUsername((String) obj[i++]);
             master.setEntryDate((String) obj[i++]);
             master.setEntryTime((String) obj[i++]);
+            List<Object[]> scanDetail = qrcodeScanDetailRepo.findAllbyToken(master.getTokenId());
+            for (Object[] objNew : scanDetail) {
+                master.setReportingDate((String) objNew[1]);
+                master.setReportingTime((String) objNew[2]);
+            }
             mList.add(master);
         }
         return mList;
@@ -100,6 +103,11 @@ public class StateService {
             master.setUsername((String) obj[i++]);
             master.setEntryDate((String) obj[i++]);
             master.setEntryTime((String) obj[i++]);
+            List<Object[]> scanDetail = qrcodeScanDetailRepo.findAllbyToken(master.getTokenId());
+            for (Object[] objNew : scanDetail) {
+                master.setReportingDate((String) objNew[1]);
+                master.setReportingTime((String) objNew[2]);
+            }
             mList.add(master);
         }
         return mList;

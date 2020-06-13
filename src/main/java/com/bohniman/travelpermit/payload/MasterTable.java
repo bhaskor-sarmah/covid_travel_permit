@@ -21,5 +21,7 @@ public class MasterTable {
     private String username;
     private String entryDate;
     private String entryTime;
+    private String reportingDate;
+    private String reportingTime;
 
 }

@@ -56,7 +56,7 @@ public interface QrCodeDataRepo extends JpaRepository<QrCodeData, Long> {
                         + "SELECT a.token_id,a.reached_screening_center,e.name,e.mobile_number,e.district FROM qrcode_data a, "
                         + "qrcode_data_qrcode_member_detail_mapping c,qrcode_member_detail e WHERE a.id = c.qrcode_data_id AND "
                         + "e.id = c.qrcode_member_detail_id) main_table "
-                        + "WHERE main_table.district = ?1 AND main_table.reached_screening_center = 1 GROUP BY main_table.token_id) second_table;", nativeQuery = true)
+                        + "WHERE main_table.district = ?1 AND main_table.reached_screening_center = 0 GROUP BY main_table.token_id) second_table;", nativeQuery = true)
         Long getDistrictWiseNotScreenedTotalCount(String district);
 
         List<QrCodeData> findAllByStatus(String string);
@@ -79,10 +79,19 @@ public interface QrCodeDataRepo extends JpaRepository<QrCodeData, Long> {
         @Query(value = "SELECT qrcode_id,reached_screening_center,token_id,destination_district,name,mobile_number,pin,thana,address,assigned_screening_center,entry_status,username,entry_date,entry_time FROM master_table WHERE entry_status = ?1 AND entry_date = ?2", nativeQuery = true)
         List<Object[]> findAllByDate(String status, String date);
 
+        @Query(value = "SELECT qrcode_id,reached_screening_center,token_id,destination_district,name,mobile_number,pin,thana,address,assigned_screening_center,entry_status,username,entry_date,entry_time FROM master_table WHERE entry_status = ?1 AND entry_date = ?2 AND destination_district=?3", nativeQuery = true)
+        List<Object[]> findAllByDateAndDistrict(String status, String date, String district);
+
         @Query(value = "SELECT qrcode_id,reached_screening_center,token_id,destination_district,name,mobile_number,pin,thana,address,assigned_screening_center,entry_status,username,entry_date,entry_time FROM master_table WHERE entry_status = ?1 AND entry_date = ?2 AND reached_screening_center = 0", nativeQuery = true)
         List<Object[]> findAllPendingByDate(String status, String date);
 
+        @Query(value = "SELECT qrcode_id,reached_screening_center,token_id,destination_district,name,mobile_number,pin,thana,address,assigned_screening_center,entry_status,username,entry_date,entry_time FROM master_table WHERE entry_status = ?1 AND entry_date = ?2 AND reached_screening_center = 0 AND destination_district=?3", nativeQuery = true)
+        List<Object[]> findAllPendingByDateAndDistrict(String status, String date, String district);
+
         @Query(value = "SELECT qrcode_id,reached_screening_center,token_id,destination_district,name,mobile_number,pin,thana,address,assigned_screening_center,entry_status,username,entry_date,entry_time FROM master_table WHERE entry_status = ?1 AND entry_date = ?2 AND reached_screening_center = 1", nativeQuery = true)
         List<Object[]> findAllArrivedByDate(String status, String date);
+
+        @Query(value = "SELECT qrcode_id,reached_screening_center,token_id,destination_district,name,mobile_number,pin,thana,address,assigned_screening_center,entry_status,username,entry_date,entry_time FROM master_table WHERE entry_status = ?1 AND entry_date = ?2 AND reached_screening_center = 1 AND destination_district=?3", nativeQuery = true)
+        List<Object[]> findAllArrivedByDateAndDistrict(String status, String date, String district);
 
 }
